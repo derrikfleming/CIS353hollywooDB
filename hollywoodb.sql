@@ -1,6 +1,7 @@
 --TODO:
 -- BOXOFFICE inserts need to accomodate for costOfProduction
---
+-- WORKS_ON  new table, we need data for
+-- DISTRIBUTES new table, we need data for
 --
 --
 
