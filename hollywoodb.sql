@@ -1,3 +1,9 @@
+--TODO:
+-- BOXOFFICE inserts need to accomodate for costOfProduction
+--
+--
+--
+
 SPOOL project.out
 SET ECHO ON
 --
@@ -22,7 +28,7 @@ CONSTRAINT pcIC1 CHECK(year_founded >= 1800 AND year_founded <= 2017)
 --
 CREATE TABLE movie (
   movieTitle	        varchar2(50) PRIMARY KEY,
-  cName			        varchar2(50),
+  cName			          varchar2(50),
   duration    	      number(4) NOT NULL,
   genre 			        varchar2(50) NOT NULL,
   rating			        number(1),
@@ -35,7 +41,7 @@ CREATE TABLE person (
   personName				  varchar2(50) PRIMARY KEY,
   cName			    varchar2(50),
   hDate			    date,
-  date_birth    date,
+  dateOfBirth    date,
   sex				    char(1) NOT NULL,
 --
 CONSTRAINT pIC1 CHECK (sex IN('m','f')),
@@ -52,6 +58,7 @@ CREATE TABLE distributor (
 --
 CREATE TABLE box_office (
   mTitle	                 varchar2(50) PRIMARY KEY,
+  costOfProduction         varchar2(15),
   admissions		           number(15),
   openingWeekendRevenue		 number(15),
   grossProfit	           number(15),
@@ -77,6 +84,22 @@ CREATE TABLE genre (
 --	
 );
 --
+CREATE TABLE works_on (
+  personName      varchar2(50) PRIMARY KEY,
+  movieTitle      varchar2(50),
+  primaryRole     varchar2(25)
+--
+);
+--
+CREATE TABLE distributes (
+  distributorName        varchar2(50) PRIMARY KEY,
+  movieTitle            varchar2(50), 
+  distributionDate      date,
+  distributionMedium    varchar2(20),
+  country               varchar2(20) 
+--
+);
+--
 -- Adding foreign keys:
 ALTER TABLE movie
 ADD FOREIGN KEY (cName) REFERENCES production_company (companyName)
@@ -95,7 +118,7 @@ ADD FOREIGN KEY (mTitle) REFERENCES movie (movieTitle)
 Deferrable initially deferred;
 --
 ALTER TABLE genre
-ADD FOREIGN KEY (mTitle) REFERENCES movie (movieTitle)
+ADD FOREIGN KEY (mTitle) REFERENCES movie (movieTitle)  
 Deferrable initially deferred;
 --
 -- --------------------------------------------------------------
