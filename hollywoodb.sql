@@ -14,27 +14,27 @@ DROP TABLE genre CASCADE CONSTRAINTS;
 --
 -- Create new tables
 CREATE TABLE production_company (
-  company_name		varchar2(50) PRIMARY KEY,
-  year_founded		number(4),
+  companyName		varchar2(50) PRIMARY KEY,
+  yearFounded		number(4),
 --
 CONSTRAINT pcIC1 CHECK(year_founded >= 1800 AND year_founded <= 2017)
 );
 --
 CREATE TABLE movie (
-  title				        varchar2(50) PRIMARY KEY,
-  co_name			        varchar2(50),
-  mins_duration	      number(4) NOT NULL,
-  mgenre 			        varchar2(50) NOT NULL,
+  movieTitle	        varchar2(50) PRIMARY KEY,
+  cName			        varchar2(50),
+  duration    	      number(4) NOT NULL,
+  genre 			        varchar2(50) NOT NULL,
   rating			        number(1),
 --
-CONSTRAINT mIC1 UNIQUE (title, co_name),
+CONSTRAINT mIC1 UNIQUE (movieTitle, cName),
 CONSTRAINT mIC2 CHECK (rating IN ('1','2','3','4','5'))	
 );
 --
 CREATE TABLE person (
-  pname				  varchar2(50) PRIMARY KEY,
-  comp_name			varchar2(50),
-  hire_date			date,
+  personName				  varchar2(50) PRIMARY KEY,
+  cName			    varchar2(50),
+  hDate			    date,
   date_birth    date,
   sex				    char(1) NOT NULL,
 --
@@ -43,59 +43,59 @@ CONSTRAINT pIC2 CHECK (age >= 1)
 );
 --
 CREATE TABLE distributor (
-  dist_name		     varchar2(50) PRIMARY KEY,
-  founding_date    date,
-  president_name   varchar2(50),
-  founder_name     varchar2(50)
+  distributorName	   varchar2(50) PRIMARY KEY,
+  dateOfFounding     date,
+  president          varchar2(50),
+  founder            varchar2(50)
 --
 );
 --
 CREATE TABLE box_office (
-  mtitle	       varchar2(50) PRIMARY KEY,
-  admissions		 number(15),
-  opening_wkd		 number(15),
-  gross_profit	 number(15),
+  mTitle	                 varchar2(50) PRIMARY KEY,
+  admissions		           number(15),
+  openingWeekendRevenue		 number(15),
+  grossProfit	           number(15),
 --
-CONSTRAINT boIC1 CHECK(opening_wkd >= 0)
+CONSTRAINT boIC1 CHECK(openingWeekendRevenue >= 0)
 );
 --
 CREATE TABLE roles (
-  person_name		        varchar2(50) PRIMARY KEY,
-  person_role				    varchar2(50)
+  personName		        varchar2(50) PRIMARY KEY,
+  personRole				    varchar2(50)
 --
 );
 --
 CREATE TABLE awards (
-  movie_title			varchar2(50) PRIMARY KEY,
-  movie_award			varchar2(50)
+  mTitle			varchar2(50) PRIMARY KEY,
+  mAward			varchar2(50)
 --
 );
 --
 CREATE TABLE genre (
-  mov_title 		varchar2(50) PRIMARY KEY,
-  mov_genre		  varchar2(50)
+  mTitle 		varchar2(50) PRIMARY KEY,
+  mGenre		  varchar2(50)
 --	
 );
 --
 -- Adding foreign keys:
 ALTER TABLE movie
-ADD FOREIGN KEY (co_name) REFERENCES production_company (company_name)
+ADD FOREIGN KEY (cName) REFERENCES production_company (companyName)
 Deferrable initially deferred;
 --
 ALTER TABLE box_office
-ADD FOREIGN KEY (mtitle) REFERENCES movie (title)
+ADD FOREIGN KEY (mtitle) REFERENCES movie (movieTitle)
 Deferrable initially deferred;
 --
 ALTER TABLE roles
-ADD FOREIGN KEY (person_name) REFERENCES person (pname)
+ADD FOREIGN KEY (personName) REFERENCES person (personName)
 Deferrable initially deferred;
 --
 ALTER TABLE awards
-ADD FOREIGN KEY (movie_title) REFERENCES movie (title)
+ADD FOREIGN KEY (mTitle) REFERENCES movie (movieTitle)
 Deferrable initially deferred;
 --
 ALTER TABLE genre
-ADD FOREIGN KEY (mov_title) REFERENCES movie (title)
+ADD FOREIGN KEY (mTitle) REFERENCES movie (movieTitle)
 Deferrable initially deferred;
 --
 -- --------------------------------------------------------------
