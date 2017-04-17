@@ -1,4 +1,5 @@
---TODO:
+--TODO: Write a 1 row, 2 attribute Integrity Constraint, and a test for it.
+--      Add Values to works_on
 --
 
 SPOOL project.out
@@ -11,10 +12,10 @@ DROP TABLE person CASCADE CONSTRAINTS;
 DROP TABLE production_company CASCADE CONSTRAINTS;
 DROP TABLE distributor CASCADE CONSTRAINTS;
 DROP TABLE box_office CASCADE CONSTRAINTS;
-DROP TABLE roles CASCADE CONSTRAINTS;
 DROP TABLE awards CASCADE CONSTRAINTS;
 DROP TABLE genre CASCADE CONSTRAINTS;
 DROP TABLE works_on CASCADE CONSTRAINTS;
+DROP TABLE distributes CASCADE CONSTRAINTS;
 --
 -- Create new tables
 CREATE TABLE production_company (
@@ -55,42 +56,46 @@ CREATE TABLE distributor (
 );
 --
 CREATE TABLE box_office (
-  mTitle	                 varchar2(50) PRIMARY KEY,
+  mTitle	                 varchar2(50),
   costOfProduction         varchar2(15),
   admissions		           number(15),
   openingWeekendRevenue		 number(15),
   grossProfit	           number(15),
+  PRIMARY KEY (costOfProduction, mTitle),
 --
-CONSTRAINT boIC1 CHECK(openingWeekendRevenue >= 0)
-);
+CONSTRAINT boIC1 CHECK (openingWeekendRevenue >= 0)
 --
 );
 --
 CREATE TABLE awards (
-  mTitle			varchar2(50) PRIMARY KEY,
-  mAward			varchar2(50)
+  mTitle			varchar2(50),
+  mAward			varchar2(50),
+  PRIMARY KEY (mTitle, mAward)
 --
 );
 --
 CREATE TABLE genre (
-  mTitle 		varchar2(50) PRIMARY KEY,
-  mGenre		  varchar2(50)
+  mTitle 		varchar2(50),
+  mGenre		  varchar2(50),
+  PRIMARY KEY (mTitle, mGenre)
 --	
 );
 --
 CREATE TABLE works_on (
-  personName      varchar2(50) PRIMARY KEY,
+  personName      varchar2(50),
   movieTitle      varchar2(50),
-  primaryRole     varchar2(25)
+  primaryRole     varchar2(25),
+  PRIMARY KEY (personName, movieTitle)
 --
 );
 --
 CREATE TABLE distributes (
-  distributorName        varchar2(50) PRIMARY KEY,
+  distributorName        varchar2(50),
   movieTitle            varchar2(50), 
   distributionDate      date,
   distributionMedium    varchar2(20),
-  country               varchar2(20) 
+  country               varchar2(20),
+  PRIMARY KEY (distributorName, movieTitle) 
 --
 );
 --
@@ -101,10 +106,6 @@ Deferrable initially deferred;
 --
 ALTER TABLE box_office
 ADD FOREIGN KEY (mtitle) REFERENCES movie (movieTitle)
-Deferrable initially deferred;
---
-ALTER TABLE roles
-ADD FOREIGN KEY (personName) REFERENCES person (personName)
 Deferrable initially deferred;
 --
 ALTER TABLE awards
@@ -145,19 +146,19 @@ INSERT INTO movie VALUES ('Casablanca', 'Warner Bros. Pictures', '102','romance'
 INSERT INTO movie VALUES ('Life', 'Warner Bros. Pictures', '117','romance',8);
 --
 -- person inserts
-INSERT INTO person VALUES('Will Smith','PW Management','10/15/16',43,'m');
-INSERT INTO person VALUES('John Smith','PW Management','03/22/14',47,'m');
-INSERT INTO person VALUES('Jason Momoa','JR Agencies','01/19/12',39,'m');
-INSERT INTO person VALUES('Emma Watson','PW Management','07/25/09',28,'f');
-INSERT INTO person VALUES('Abby Hall','JR Agencies','02/04/13',31,'f');
-INSERT INTO person VALUES('Seth Rogen','JR Agencies','09/27/15',34,'m');
-INSERT INTO person VALUES('Emily Jones','EL Management','09/04/16',42,'f');
-INSERT INTO person VALUES('George Mann','EL Management','05/15/12',53,'m');
+INSERT INTO person VALUES('Will Smith','PW Management','10/15/2016','09/25/1968','m');
+INSERT INTO person VALUES('John Smith','PW Management','3/22/2014','02/12/1965','m');
+INSERT INTO person VALUES('Jason Momoa','JR Agencies','1/19/2012','08/01/1979','m');
+INSERT INTO person VALUES('Emma Watson','PW Management','07/05/2009','04/15/1990','f');
+INSERT INTO person VALUES('Abby Hall','JR Agencies','02/24/2013','06/14/1987','f');
+INSERT INTO person VALUES('Seth Rogen','JR Agencies','09/27/2015','04/15/1982','m');
+INSERT INTO person VALUES('Emily Jones','EL Management','09/04/2016','08/01/1977','f');
+INSERT INTO person VALUES('George Mann','EL Management','05/15/2012','12/02/1978','m');
 --
 -- testing (pIC1)
-INSERT INTO person VALUES('Eli Joseph','EL Management','03/20/11',50,'n');
+INSERT INTO person VALUES('Eli Joseph','EL Management','03/20/2011','07/31/1955','n');
 -- testing (pIC2)
-INSERT INTO person VALUES('George Mann','EL Management','05/15/12',-40,'m');
+INSERT INTO person VALUES('Anne Murrica','EL Management','05/15/2012','07/04/1776','f');
 --
 -- production company inserts
 INSERT INTO production_company VALUES('Warner Bros. Pictures',1923);
@@ -172,28 +173,28 @@ INSERT INTO production_company VALUES('MGM',1924);
 INSERT INTO production_company VALUES('Sony Pictures Home Entertainment',1991);
 --
 -- testing (pcIC1)
-INSERT INTO movie VALUES('Warner Bros. Pictures',1700)
+INSERT INTO movie VALUES('Warner Bros. Pictures',1700);
 --
 -- distributor inserts
-INSERT INTO distributor VALUES('Warner Bros. Pictures',’10/09/95’);
-INSERT INTO distributor VALUES('RKO Radio Pictures',’01/24/89’);
-INSERT INTO distributor VALUES('Rialto Pictures',’03/12/93’);
-INSERT INTO distributor VALUES('20th Century Fox',’07/05/82’);
-INSERT INTO distributor VALUES('Paramount Pictures',’11/20/74’);
-INSERT INTO distributor VALUES('Disney/Pixar',’12/17/77’);
-INSERT INTO distributor VALUES('Universal Pictures',’02/20/88’);
-INSERT INTO distributor VALUES('United Artists',’08/24/86’);
-INSERT INTO distributor VALUES('MGM',’09/03/97’);
-INSERT INTO distributor VALUES('Sony Pictures Home Entertainment',’10/24/03’);
+INSERT INTO distributor VALUES('Warner Bros. Pictures','10/09/95','Kevin Tsujihara','The Warner Bros');
+INSERT INTO distributor VALUES('RKO Radio Pictures','01/24/89', 'DEFUNCT', 'Joseph P. Kennedy Sr.');
+INSERT INTO distributor VALUES('Rialto Pictures','03/12/93','Bruce Goldstein', 'Bruce Goldstein');
+INSERT INTO distributor VALUES('20th Century Fox','07/05/82', 'Stacey Snider', 'William Fox');
+INSERT INTO distributor VALUES('Paramount Pictures','11/20/74','Jim Gianopulos', 'Jesse L. Lasky');
+INSERT INTO distributor VALUES('Disney/Pixar','12/17/77', 'Robert A. Iger', 'Walt Disney');
+INSERT INTO distributor VALUES('Universal Pictures','02/20/88', 'Ronald Meyer', 'Carl Laemmle');
+INSERT INTO distributor VALUES('United Artists','08/24/86', 'Mark Burnette', 'Charlie Chaplain');
+INSERT INTO distributor VALUES('MGM','09/03/97', 'Gary Barber', 'Louis B. Mayer');
+INSERT INTO distributor VALUES('Sony Pictures Home Entertainment','10/24/03', 'Man Jit Singh', 'Masaru Ibuka');
 -- testing (IC name)
 -- distributes inserts
-INSERT INTO distributes VALUES(‘Warner Bros. Pictures’,’The Wizard of Oz’,’10/24/03’,’dvd’,’United States’);
-INSERT INTO distributes VALUES(‘RKO Radio Pictures’,’Citizen Kane’,’10/20/04’,’dvd’,’United States’);
-INSERT INTO distributes VALUES(‘Rialto Pictures’,’The Third Man’,’07/18/00’,’dvd’,’United States’);
-INSERT INTO distributes VALUES(‘20th Century Fox’,’MM Fury Road’,’08/27/06’,’vcr’,’United States’);
-INSERT INTO distributes VALUES(‘Paramount Pictures’,’All About Eve’,’04/12/02’,’vcr’,’United States’);
-INSERT INTO distributes VALUES(‘Disney/Pixar’,’The Cabinet of Dr. Caligari’,’10/20/99’,’dvd’,’United States’);
-INSERT INTO distributes VALUES(‘Universal Pictures’,’Inside Out’,’02/24/05’,’vcr’,’United States’);
+INSERT INTO distributes VALUES('Warner Bros. Pictures','The Wizard of Oz','10/24/03','dvd','United States');
+INSERT INTO distributes VALUES('RKO Radio Pictures','Citizen Kane','10/20/04','dvd','United States');
+INSERT INTO distributes VALUES('Rialto Pictures','The Third Man','07/18/2000','dvd','United States');
+INSERT INTO distributes VALUES('20th Century Fox','MM Fury Road','08/27/06','vcr','United States');
+INSERT INTO distributes VALUES('Paramount Pictures','All About Eve','04/12/02','vcr','United States');
+INSERT INTO distributes VALUES('Disney/Pixar','The Cabinet of Dr. Caligari','10/20/99','dvd','United States');
+INSERT INTO distributes VALUES('Universal Pictures','Inside Out','02/24/05','vcr','United States');
 --testing (IC name)
 -- box office inserts
 INSERT INTO box_office VALUES('The Wizard of Oz',4897362,1235986,156872,985634587);
@@ -216,14 +217,14 @@ INSERT INTO box_office VALUES('Casablanca',1829423,1286475,235687,563254100);
 INSERT INTO box_office VALUES('Life',1829423,1286475,-235687,563254100);
 --
 -- works_on inserts
-INSERT INTO works_on VALUES(‘Will Smith’,’actor’);
-INSERT INTO works_on VALUES(‘John Smith’,’booking agent’);
-INSERT INTO works_on VALUES(‘Jason Momoa’,’actor’);
-INSERT INTO works_on VALUES(‘Emma Watson’,’actress’);
-INSERT INTO works_on VALUES(‘Abby Hall’,’booking agent’);
-INSERT INTO works_on VALUES(‘Seth Rogen’,’actor’);
-INSERT INTO works_on VALUES(‘Emily Jones’,’director’);
-INSERT INTO works_on VALUES(‘George Mann’,’producer’);
+INSERT INTO works_on VALUES('Will Smith','actor');
+INSERT INTO works_on VALUES('John Smith','booking agent');
+INSERT INTO works_on VALUES('Jason Momoa','actor');
+INSERT INTO works_on VALUES('Emma Watson','actress');
+INSERT INTO works_on VALUES('Abby Hall','booking agent');
+INSERT INTO works_on VALUES('Seth Rogen','actor');
+INSERT INTO works_on VALUES('Emily Jones','director');
+INSERT INTO works_on VALUES('George Mann','producer');
 -- testing (IC name)
 -- awards inserts
 INSERT INTO awards VALUES ('The Wizard of Oz','Film of The Year');
