@@ -217,14 +217,14 @@ INSERT INTO box_office VALUES('Casablanca',1829423,1286475,235687,563254100);
 INSERT INTO box_office VALUES('Life',1829423,1286475,-235687,563254100);
 --
 -- works_on inserts
-INSERT INTO works_on VALUES('Will Smith','actor');
-INSERT INTO works_on VALUES('John Smith','booking agent');
-INSERT INTO works_on VALUES('Jason Momoa','actor');
-INSERT INTO works_on VALUES('Emma Watson','actress');
-INSERT INTO works_on VALUES('Abby Hall','booking agent');
-INSERT INTO works_on VALUES('Seth Rogen','actor');
-INSERT INTO works_on VALUES('Emily Jones','director');
-INSERT INTO works_on VALUES('George Mann','producer');
+INSERT INTO works_on VALUES('Will Smith','Life','actor');
+INSERT INTO works_on VALUES('John Smith','It','booking agent');
+INSERT INTO works_on VALUES('Jason Momoa','Taken','actor');
+INSERT INTO works_on VALUES('Emma Watson','Interstellar','actress');
+INSERT INTO works_on VALUES('Abby Hall','Martian','booking agent');
+INSERT INTO works_on VALUES('Seth Rogen','Pineapple Express','actor');
+INSERT INTO works_on VALUES('Emily Jones','Prizoner of Azkaban','director');
+INSERT INTO works_on VALUES('George Mann','Forrest Gump','producer');
 -- testing (IC name)
 -- awards inserts
 INSERT INTO awards VALUES ('The Wizard of Oz','Film of The Year');
