@@ -139,9 +139,9 @@ INSERT INTO movie VALUES ('E.T. The Extra-Terrestrial', 'Universal Pictures','11
 INSERT INTO movie VALUES ('Singin in the Rain', 'MGM', '102',4);
 INSERT INTO movie VALUES ('It Happened One Night', 'Sony Pictures Home Entertainment', '105',3);
 INSERT INTO movie VALUES ('Casablanca', 'Warner Bros. Pictures', '102',4);
-INSERT INTO movie VALUES ('Animal House', 'Universal Pictures', '109','comedy',6);
-INSERT INTO movie VALUES ('Pineapple Express', 'Sony Pictures Home Entertainment','117','comedy',5);
-INSERT INTO movie VALUES ('Drillbit Taylor', 'Paramount Pictures','102','comedy',5);
+INSERT INTO movie VALUES ('Animal House', 'Universal Pictures', '109',5);
+INSERT INTO movie VALUES ('Pineapple Express', 'Sony Pictures Home Entertainment','117',5);
+INSERT INTO movie VALUES ('Drillbit Taylor', 'Paramount Pictures','102',5);
 --
 -- testing (mIC1)
 
@@ -155,7 +155,7 @@ INSERT INTO person VALUES('Jason Momoa','JR Agencies','1/19/2012','08/01/1979','
 INSERT INTO person VALUES('Emma Watson','PW Management','07/05/2009','04/15/1990','f');
 INSERT INTO person VALUES('Abby Hall','JR Agencies','02/24/2013','06/14/1987','f');
 INSERT INTO person VALUES('Seth Rogen','JR Agencies','09/27/2015','04/15/1982','m');
-INSERT INTO person VALUES('James Franco','HI & GH Agencies','04/20/2006','04/19/1978','m');
+INSERT INTO person VALUES('James Franco','HI GH Agencies','04/20/2006','04/19/1978','m');
 INSERT INTO person VALUES('Emily Jones','EL Management','09/04/2016','08/01/1977','f');
 INSERT INTO person VALUES('George Mann','EL Management','05/15/2012','12/02/1978','m');
 INSERT INTO person VALUES('John Belushi','Blues Bros Management','05/15/1978','01/24/1949','m');
