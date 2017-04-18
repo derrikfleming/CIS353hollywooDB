@@ -20,7 +20,7 @@ WHERE p.personName = w.personName AND
 -- 2: Self Join
 -- Find pairs of names of people who worked on the same movie that also share the same birthday.
 --
-SELECT  DISTINCT P1.personName, P2.personName, P1.dateOfBirth,  W1.works_on
+SELECT  DISTINCT P1.personName, P2.personName, P1.dateOfBirth,  W1.movieTitle
 FROM 	person P1, person P2, works_on w1, works_on w2
 WHERE 	p1.personName <> p2.personName AND
 		p1.personName = w1.personName AND p2.personName = w2.personName AND
@@ -49,7 +49,7 @@ WHERE b.grossProfit >
  (SELECT AVG (b.grossProfit)
  FROM box_office b, awards a, movie m
  WHERE a.mAward IS NOT NULL AND
-       m.rating > 3)
+       m.rating > 3);
 --
 -- 5: GROUP BY, HAVING, ORDER BY
 -- < Find the average duration of movies with a rating of 3, 4, and 5 >
