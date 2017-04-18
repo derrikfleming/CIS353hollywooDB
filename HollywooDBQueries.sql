@@ -59,9 +59,6 @@ SELECT rating, AVG (duration)
    HAVING COUNT (rating) > 2
    ORDER BY AVG (rating);
 --
-SELECT
-FROM
-WHERE ;
 --
 -- 6: Correlated Subquery
 -- Find any movie that has a gross profit greater than the average gross profit of movies in
