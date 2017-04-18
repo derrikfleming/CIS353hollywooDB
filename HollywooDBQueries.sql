@@ -62,7 +62,7 @@ WHERE ;
 -- Find any movie that has a gross profit greater than the average gross profit of movies in
 -- the same genre.
 --
-SELECT m1.movieTitle, b1.grossProfit 
+SELECT DISTINCT m1.movieTitle, b1.grossProfit 
 FROM movie m1, box_office b1, genre g1
 WHERE m1.movieTitle = b1.mTitle AND
 	  b1.grossProfit > 
