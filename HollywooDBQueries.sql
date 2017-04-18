@@ -54,11 +54,16 @@ FROM
 WHERE ;
 --
 -- 6: Correlated Subquery
--- < DESCRIPTION HERE >
+-- Find any movie that has a gross profit greater than the average gross profit if 
 --
-SELECT
-FROM
-WHERE ;
+SELECT m1.movieTitle, b1.grossProfit 
+FROM movie m1, box_office b1
+WHERE m1.movieTitle = b1.movieTitle AND
+	  b1.grossProfit > 
+      (SELECT AVG(b2.grossProfit)
+       FROM movie m2, box_office b2
+       WHERE b1.mGenre = b2.mGenre)
+ORDER BY m1.movieTitle;
 --
 -- 7: Non-correlated Subquery
 -- < DESCRIPTION HERE >
