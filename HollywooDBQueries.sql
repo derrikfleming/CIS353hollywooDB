@@ -12,11 +12,10 @@ SET ECHO ON
 SELECT p.personName, m.movieTitle, b.grossProfit
 FROM Person p, Movie m, box_office b, works_on w, genre g
 WHERE p.personName = w.personName AND
-	  m.movieTitle = w.movieTitle AND b.movieTitle = m.movieTitle AND g.movieTitle = m.movieTitle AND
+	  m.movieTitle = w.movieTitle AND b.mTitle = m.movieTitle AND g.mTitle = m.movieTitle AND
 	  b.grossProfit > 50000000 AND
 	  w.primaryRole = 'actor' AND
-	  g.genre LIKE '%comedy%'
-	  ;
+	  g.Mgenre LIKE '%comedy%;
 --
 -- 2: Self Join
 -- Find pairs of names of people who worked on the same movie that also share the same birthday.
