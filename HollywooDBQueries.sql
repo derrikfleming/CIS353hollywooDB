@@ -10,11 +10,12 @@ SET ECHO ON
 -- that worked on a comedy film that grossed more than $50 mill 
 --
 SELECT p.personName, m.movieTitle, b.grossProfit
-FROM Person p, Movie m, box_office b, works_on w
+FROM Person p, Movie m, box_office b, works_on w, genre g
 WHERE p.personName = w.personName AND
-	  m.movieTitle = w.movieTitle AND b.movieTitle = m.movieTitle AND
+	  m.movieTitle = w.movieTitle AND b.movieTitle = m.movieTitle AND g.movieTitle = m.movieTitle AND
 	  b.grossProfit > 50000000 AND
-	  w.primaryRole = 'actor'
+	  w.primaryRole = 'actor' AND
+	  g.genre LIKE '%comedy%'
 	  ;
 --
 -- 2: Self Join
