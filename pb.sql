@@ -194,15 +194,15 @@ INSERT INTO production_company VALUES('LA Management',1912);
 INSERT INTO production_company VALUES('Warner Bros. Pictures',1700);
 --
 -- distributor inserts
-INSERT INTO distributor VALUES('Warner Bros. Pictures','10/09/95','Kevin Tsujihara','The Warner Bros');
+INSERT INTO distributor VALUES('Warner Bros. Pictures','10/09/95','Kevin Tsujihara','Jesse L. Lasky');
 INSERT INTO distributor VALUES('RKO Radio Pictures','01/24/89', 'DEFUNCT', 'Joseph P. Kennedy Sr.');
 INSERT INTO distributor VALUES('Rialto Pictures','03/12/93','Bruce Goldstein', 'Bruce Goldstein');
 INSERT INTO distributor VALUES('20th Century Fox','07/05/82', 'Stacey Snider', 'William Fox');
-INSERT INTO distributor VALUES('Paramount Pictures','11/20/74','Jim Gianopulos', 'Jesse L. Lasky');
+INSERT INTO distributor VALUES('Paramount Pictures','10/09/95','Jim Gianopulos', 'Jesse L. Lasky');
 INSERT INTO distributor VALUES('Disney/Pixar','12/17/77', 'Robert A. Iger', 'Walt Disney');
 INSERT INTO distributor VALUES('Universal Pictures','02/20/88', 'Ronald Meyer', 'Carl Laemmle');
 INSERT INTO distributor VALUES('United Artists','08/24/86', 'Mark Burnette', 'Charlie Chaplain');
-INSERT INTO distributor VALUES('MGM','09/03/97', 'Gary Barber', 'Louis B. Mayer');
+INSERT INTO distributor VALUES('MGM','10/09/95', 'Gary Barber', 'Jesse L. Lasky');
 INSERT INTO distributor VALUES('Sony Pictures Home Entertainment','10/24/03', 'Man Jit Singh', 'Masaru Ibuka');
 -- testing (IC name)
 -- distributes inserts

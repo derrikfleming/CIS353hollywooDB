@@ -18,15 +18,13 @@ WHERE p.personName = w.personName AND
 	  g.Mgenre LIKE '%comedy%';
 --
 -- 2: Self Join
--- Find pairs of names of people who worked on the same movie that also share the same birthday.
+-- Find names of distributors who were founded at the same time that also share the same founder.
 --
-SELECT  DISTINCT P1.personName, P2.personName, P1.dateOfBirth,  W1.movieTitle
-FROM 	person P1, person P2, works_on w1, works_on w2
-WHERE 	p1.personName <> p2.personName AND
-		p1.personName = w1.personName AND p2.personName = w2.personName AND
-		w1.movieTitle = w2.movieTitle AND
-		p1.dateOfBirth = p2.dateOfBirth
-		;
+SELECT DISTINCT d1.distributorName
+   FROM distributor d1, distributor d2
+   WHERE d1.distributorName <> d2.distributorName AND
+         d1.founder = d2.founder AND
+         d1.dateOfFounding = d2.dateOfFounding;
 --
 -- 3: Union/Intersection/Minus
 -- < Select all of the action movies with a rating greater than 3 >
