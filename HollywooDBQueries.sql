@@ -40,11 +40,16 @@ FROM genre g
 WHERE g.mGenre LIKE '%action%';
 --
 -- 4: SUM/AVG/MAX/MIN
--- < DESCRIPTION HERE >
+-- < Select the movie title, cost of production and gross profit for all movies that have earned awards, with ratings greater than 3,
+--   and whose gross profit is greater than the average gross profit >
 --
-SELECT
-FROM
-WHERE ;
+SELECT b.mTitle, b.costOfProduction, b.grossProfit
+FROM box_office b
+WHERE b.grossProfit > 
+ (SELECT AVG (b.grossProfit)
+ FROM box_office b, awards a, movie m
+ WHERE a.mAward IS NOT NULL AND
+       m.rating > 3)
 --
 -- 5: GROUP BY, HAVING, ORDER BY
 -- < DESCRIPTION HERE >
