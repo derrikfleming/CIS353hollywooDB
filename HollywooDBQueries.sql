@@ -29,11 +29,15 @@ WHERE 	p1.personName <> p2.personName AND
 		;
 --
 -- 3: Union/Intersection/Minus
--- < DESCRIPTION HERE >
+-- < Select all of the action movies with a rating greater than 3 >
 --
-SELECT
-FROM
-WHERE ;
+SELECT m.movieTitle
+FROM movie m 
+WHERE m.rating > 3
+INTERSECT
+SELECT g.mTitle
+FROM genre g
+WHERE g.mGenre LIKE '%action%';
 --
 -- 4: SUM/AVG/MAX/MIN
 -- < DESCRIPTION HERE >
