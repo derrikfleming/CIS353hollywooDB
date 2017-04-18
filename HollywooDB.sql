@@ -139,6 +139,7 @@ INSERT INTO movie VALUES ('E.T. The Extra-Terrestrial', 'Universal Pictures','11
 INSERT INTO movie VALUES ('Singin in the Rain', 'MGM', '102',4);
 INSERT INTO movie VALUES ('It Happened One Night', 'Sony Pictures Home Entertainment', '105',3);
 INSERT INTO movie VALUES ('Casablanca', 'Warner Bros. Pictures', '102',4);
+INSERT INTO movie VALUES ('Animal House', 'Universal Pictures', '109','comedy',6);
 --
 -- testing (mIC1)
 
@@ -154,6 +155,8 @@ INSERT INTO person VALUES('Abby Hall','JR Agencies','02/24/2013','06/14/1987','f
 INSERT INTO person VALUES('Seth Rogen','JR Agencies','09/27/2015','04/15/1982','m');
 INSERT INTO person VALUES('Emily Jones','EL Management','09/04/2016','08/01/1977','f');
 INSERT INTO person VALUES('George Mann','EL Management','05/15/2012','12/02/1978','m');
+INSERT INTO person VALUES('John Belushi','Blues Bros Management','05/15/1978','01/24/1949','m');
+INSERT INTO person VALUES('Kevin Bacon','5-0 Management','05/15/2012','12/02/1978','m');
 --
 -- testing (pIC1)
 INSERT INTO person VALUES('Eli Joseph','EL Management','03/20/2011','07/31/1955','n');
@@ -195,6 +198,7 @@ INSERT INTO distributes VALUES('20th Century Fox','MM Fury Road','08/27/06','vcr
 INSERT INTO distributes VALUES('Paramount Pictures','All About Eve','04/12/02','vcr','United States');
 INSERT INTO distributes VALUES('Disney/Pixar','The Cabinet of Dr. Caligari','10/20/99','dvd','United States');
 INSERT INTO distributes VALUES('Universal Pictures','Inside Out','02/24/05','vcr','United States');
+INSERT INTO distributes VALUES('Universal Pictures','Animal House','07/28/78','vcr','United States');
 --testing (IC name)
 -- box office inserts
 INSERT INTO box_office VALUES('The Wizard of Oz',4897362,1235986,156872,985634587);
@@ -212,6 +216,7 @@ INSERT INTO box_office VALUES('E.T. The Extra-Terrestrial',1728472,17854963,7421
 INSERT INTO box_office VALUES('Singin in the Rain',1827462,1235986,355684,147896321);
 INSERT INTO box_office VALUES('It Happened One Night',1829423,1596734,241322,258967413);
 INSERT INTO box_office VALUES('Casablanca',1829423,1286475,235687,563254100);
+INSERT INTO box_office VALUES('Animal House',3000000,1200341,479138,141600000);
 --
 -- testing (boIC1)
 INSERT INTO box_office VALUES('Life',1829423,1286475,-235687,563254100);
@@ -225,6 +230,8 @@ INSERT INTO works_on VALUES('Abby Hall','Martian','booking agent');
 INSERT INTO works_on VALUES('Seth Rogen','Pineapple Express','actor');
 INSERT INTO works_on VALUES('Emily Jones','Prizoner of Azkaban','director');
 INSERT INTO works_on VALUES('George Mann','Forrest Gump','producer');
+INSERT INTO works_on VALUES('John Belushi','Animal House','actor');
+INSERT INTO works_on VALUES('Kevin Bacon','Animal House','actor');
 -- testing (IC name)
 -- awards inserts
 INSERT INTO awards VALUES ('The Wizard of Oz','Film of The Year');
@@ -259,5 +266,6 @@ INSERT INTO genre VALUES ('E.T. The Extra-Terrestrial','fantasy');
 INSERT INTO genre VALUES ('Singin in the Rain','romance');
 INSERT INTO genre VALUES ('It Happened One Night','romance');
 INSERT INTO genre VALUES ('Casablanca','romance');
+INSERT INTO genre VALUES ('Animal House','comedy');
 -- testing (IC name)
 COMMIT;
