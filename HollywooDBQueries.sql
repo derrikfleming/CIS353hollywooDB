@@ -64,7 +64,7 @@ WHERE ;
 --
 SELECT m1.movieTitle, b1.grossProfit 
 FROM movie m1, box_office b1, genre g1
-WHERE m1.movieTitle = b1.movieTitle AND
+WHERE m1.movieTitle = b1.mTitle AND
 	  b1.grossProfit > 
       (SELECT AVG(b2.grossProfit)
        FROM movie m2, box_office b2, genre g2
