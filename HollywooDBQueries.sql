@@ -74,11 +74,13 @@ WHERE m1.movieTitle = b1.mTitle AND
 ORDER BY m1.movieTitle;
 --
 -- 7: Non-correlated Subquery
--- < DESCRIPTION HERE >
+-- < Finds every movie that wasn't distributed in the United States >
 --
-SELECT
-FROM
-WHERE ;
+SELECT M.movieTitle
+   FROM distributes M
+   WHERE M.country NOT IN (SELECT N.country
+                              FROM distributes N
+                              WHERE N.country = 'United States');
 --
 -- 8: A Relational DIVISION query
 -- < DESCRIPTION HERE >
