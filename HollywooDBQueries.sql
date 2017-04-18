@@ -83,11 +83,19 @@ SELECT M.movieTitle
                               WHERE N.country = 'United States');
 --
 -- 8: A Relational DIVISION query
--- < DESCRIPTION HERE >
+-- < Finds the title of every movie that has a rating of 5 and
+--   was not produced by Warner Bros. Pictures >
 --
-SELECT
-FROM
-WHERE ;
+SELECT M.movieTitle
+   FROM movie M
+   WHERE M.movieTitle = ((SELECT N.movieTitle
+                    FROM movie N
+                    WHERE N.rating = 5 AND
+                          N.movieTitle = M.movieTitle)
+                   MINUS
+                   (SELECT N.movieTitle
+                    FROM movie N
+                    WHERE N.cName != 'Warner Bros. Pictures'));
 -- 
 -- 9: Outer Join
 -- < DESCRIPTION HERE >
