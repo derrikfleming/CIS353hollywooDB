@@ -95,7 +95,7 @@ SELECT M.movieTitle
                    MINUS
                    (SELECT N.movieTitle
                     FROM movie N
-                    WHERE N.cName != 'Warner Bros. Pictures'));
+                    WHERE N.cName = 'Warner Bros. Pictures'));
 -- 
 -- 9: Outer Join
 -- < DESCRIPTION HERE >
