@@ -1,3 +1,4 @@
+
 --TODO: Write a 1 row, 2 attribute Integrity Constraint, and a test for it.
 --      Add Values to works_on
 --
@@ -29,7 +30,6 @@ CREATE TABLE movie (
   movieTitle	        varchar2(50) PRIMARY KEY,
   cName			          varchar2(50),
   duration    	      number(4) NOT NULL,
-  genre 			        varchar2(50) NOT NULL,
   rating			        number(1),
 --
 CONSTRAINT mIC1 UNIQUE (movieTitle, cName),
@@ -124,26 +124,26 @@ alter session set NLS_DATE_FORMAT = 'MM/DD/YYYY';
 --
 --
 -- movie inserts
-INSERT INTO movie VALUES ('The Wizard of Oz', 'Warner Bros. Pictures', '101','fantasy',5);
-INSERT INTO movie VALUES ('Citizen Kane', 'RKO Radio Pictures', '119','action',4);
-INSERT INTO movie VALUES ('The Third Man', 'Rialto Pictures', '104','action',5);
-INSERT INTO movie VALUES ('MM : Fury Road', 'Warner Bros. Pictures', '120','action',5);
-INSERT INTO movie VALUES ('All About Eve', '20th Century Fox', '138','romance',5);
-INSERT INTO movie VALUES ('The Cabinet of Dr.Caligari', 'Rialto Pictures', '52','thriller',4);
-INSERT INTO movie VALUES ('Inside Out', 'Disney/Pixar', '94','animation',3);
-INSERT INTO movie VALUES ('The Godfather', 'Paramount Pictures', '175','action',3);
-INSERT INTO movie VALUES ('Metropolis', 'Paramount Pictures', '115','suspense',4);
-INSERT INTO movie VALUES ('Get Out', 'Universal Pictures', '104','horror',3);
-INSERT INTO movie VALUES ('Modern Times', 'United Artists', '87','suspense',5);
-INSERT INTO movie VALUES ('E.T. The Extra-Terrestrial', 'Universal Pictures','114','fantasy',3);
-INSERT INTO movie VALUES ('Singin in the Rain', 'MGM', '102','romance',4);
-INSERT INTO movie VALUES ('It Happened One Night', 'Sony Pictures Home Entertainment', '105','romance',3);
-INSERT INTO movie VALUES ('Casablanca', 'Warner Bros. Pictures', '102','romance',4);
+INSERT INTO movie VALUES ('The Wizard of Oz', 'Warner Bros. Pictures', '101',5);
+INSERT INTO movie VALUES ('Citizen Kane', 'RKO Radio Pictures', '119', 4);
+INSERT INTO movie VALUES ('The Third Man', 'Rialto Pictures', '104', 5);
+INSERT INTO movie VALUES ('MM : Fury Road', 'Warner Bros. Pictures', '120', 5);
+INSERT INTO movie VALUES ('All About Eve', '20th Century Fox', '138', 5);
+INSERT INTO movie VALUES ('The Cabinet of Dr.Caligari', 'Rialto Pictures', '52',4);
+INSERT INTO movie VALUES ('Inside Out', 'Disney/Pixar', '94',3);
+INSERT INTO movie VALUES ('The Godfather', 'Paramount Pictures', '175',3);
+INSERT INTO movie VALUES ('Metropolis', 'Paramount Pictures', '115', 4);
+INSERT INTO movie VALUES ('Get Out', 'Universal Pictures', '104', 3);
+INSERT INTO movie VALUES ('Modern Times', 'United Artists', '87', 5);
+INSERT INTO movie VALUES ('E.T. The Extra-Terrestrial', 'Universal Pictures','114', 3);
+INSERT INTO movie VALUES ('Singin in the Rain', 'MGM', '102',4);
+INSERT INTO movie VALUES ('It Happened One Night', 'Sony Pictures Home Entertainment', '105',3);
+INSERT INTO movie VALUES ('Casablanca', 'Warner Bros. Pictures', '102',4);
 --
 -- testing (mIC1)
 
 -- testing (mIC2)
-INSERT INTO movie VALUES ('Life', 'Warner Bros. Pictures', '117','romance',8);
+INSERT INTO movie VALUES ('Life', 'Warner Bros. Pictures', '117',8);
 --
 -- person inserts
 INSERT INTO person VALUES('Will Smith','PW Management','10/15/2016','09/25/1968','m');
@@ -173,7 +173,7 @@ INSERT INTO production_company VALUES('MGM',1924);
 INSERT INTO production_company VALUES('Sony Pictures Home Entertainment',1991);
 --
 -- testing (pcIC1)
-INSERT INTO movie VALUES('Warner Bros. Pictures',1700);
+INSERT INTO production_company VALUES('Warner Bros. Pictures',1700);
 --
 -- distributor inserts
 INSERT INTO distributor VALUES('Warner Bros. Pictures','10/09/95','Kevin Tsujihara','The Warner Bros');
