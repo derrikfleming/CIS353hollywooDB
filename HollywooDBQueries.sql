@@ -52,7 +52,12 @@ WHERE b.grossProfit >
        m.rating > 3)
 --
 -- 5: GROUP BY, HAVING, ORDER BY
--- < DESCRIPTION HERE >
+-- < Find the average duration of movies with a rating of 3, 4, and 5 >
+SELECT rating, AVG (duration)
+   FROM movie
+   GROUP BY rating
+   HAVING COUNT (rating) > 2
+   ORDER BY AVG (rating);
 --
 SELECT
 FROM
