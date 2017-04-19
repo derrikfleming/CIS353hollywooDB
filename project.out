@@ -1,0 +1,1567 @@
+SQL> SET ECHO ON
+SQL> /*
+SQL> CIS353 - Movie Database Design Project
+SQL> Derrik Flemming
+SQL> Alex Duncanson
+SQL> Nathan Lindenbaum
+SQL> Mike Ames
+SQL> */
+SQL> --
+SQL> --
+SQL> -- ------------------------------------------------
+SQL> -- Creating Schema
+SQL> -- ------------------------------------------------
+SQL> --
+SQL> -- Drop pre-existing tables if present.
+SQL> --
+SQL> DROP TABLE movie CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE person CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE production_company CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE distributor CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE box_office CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE awards CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE genre CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE works_on CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> DROP TABLE distributes CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> --
+SQL> -- Create new tables
+SQL> CREATE TABLE production_company (
+  2    companyName	     varchar2(50) PRIMARY KEY,
+  3    yearFounded	     number(4),
+  4  --
+  5  CONSTRAINT pcIC1 CHECK(yearFounded >= 1800 AND yearFounded <= 2017)
+  6  );
+
+Table created.
+
+SQL> --
+SQL> CREATE TABLE movie (
+  2    movieTitle	     varchar2(50) PRIMARY KEY NOT NULL,
+  3    cName			       varchar2(50),
+  4    duration 	   number(4) NOT NULL,
+  5    rating				     number(1) NOT NULL,
+  6    gCreview 			     number(1) NOT NULL,
+  7  --
+  8  CONSTRAINT mIC1 UNIQUE (movieTitle, cName),
+  9  CONSTRAINT mIC2 CHECK (rating IN ('1','2','3','4','5')),
+ 10  CONSTRAINT mIC3 CHECK (NOT (rating > '3' AND gCreview < '1'))
+ 11  );
+
+Table created.
+
+SQL> --
+SQL> CREATE TABLE person (
+  2    personName	     varchar2(50) PRIMARY KEY,
+  3    cName			 varchar2(50),
+  4    hDate			 date,
+  5    dateOfBirth		 date,
+  6    sex			 char(1) NOT NULL,
+  7  --
+  8  CONSTRAINT pIC1 CHECK (sex IN('m','f')),
+  9  CONSTRAINT pIC2 CHECK (dateOfBirth between date '1800-01-01' and date '2017-04-15')
+ 10  );
+
+Table created.
+
+SQL> --
+SQL> CREATE TABLE distributor (
+  2    distributorName		varchar2(50) PRIMARY KEY,
+  3    dateOfFounding	  date,
+  4    president	  varchar2(50),
+  5    founder		  varchar2(50)
+  6  --
+  7  );
+
+Table created.
+
+SQL> --
+SQL> CREATE TABLE box_office (
+  2    mTitle			      varchar2(50),
+  3    costOfProduction 	varchar2(15),
+  4    admissions			number(15),
+  5    openingWeekendRevenue	      number(15),
+  6    grossProfit		number(15),
+  7    PRIMARY KEY (costOfProduction, mTitle),
+  8  --
+  9  CONSTRAINT boIC1 CHECK (openingWeekendRevenue >= 0)
+ 10  --
+ 11  );
+
+Table created.
+
+SQL> --
+SQL> CREATE TABLE awards (
+  2    mTitle			     varchar2(50),
+  3    mAward			     varchar2(50),
+  4    PRIMARY KEY (mTitle, mAward)
+  5  --
+  6  );
+
+Table created.
+
+SQL> --
+SQL> CREATE TABLE genre (
+  2    mTitle		     varchar2(50),
+  3    mGenre		       varchar2(50),
+  4    PRIMARY KEY (mTitle, mGenre)
+  5  --
+  6  );
+
+Table created.
+
+SQL> --
+SQL> CREATE TABLE works_on (
+  2    personName      varchar2(50),
+  3    movieTitle      varchar2(50),
+  4    primaryRole     varchar2(25),
+  5    PRIMARY KEY (personName, movieTitle)
+  6  --
+  7  );
+
+Table created.
+
+SQL> --
+SQL> CREATE TABLE distributes (
+  2    distributorName	      varchar2(50),
+  3    movieTitle	     varchar2(50),
+  4    distributionDate      date,
+  5    distributionMedium    varchar2(20),
+  6    country		     varchar2(20),
+  7    PRIMARY KEY (distributorName, movieTitle),
+  8    CONSTRAINT di1 FOREIGN KEY (distributorName) REFERENCES distributor (distributorName) ON DELETE CASCADE
+  9  --
+ 10  );
+
+Table created.
+
+SQL> --
+SQL> -- Adding foreign keys:
+SQL> ALTER TABLE movie
+  2  ADD FOREIGN KEY (cName) REFERENCES production_company (companyName)
+  3  Deferrable initially deferred;
+
+Table altered.
+
+SQL> --
+SQL> ALTER TABLE box_office
+  2  ADD FOREIGN KEY (mtitle) REFERENCES movie (movieTitle)
+  3  Deferrable initially deferred;
+
+Table altered.
+
+SQL> --
+SQL> ALTER TABLE awards
+  2  ADD FOREIGN KEY (mTitle) REFERENCES movie (movieTitle)
+  3  Deferrable initially deferred;
+
+Table altered.
+
+SQL> --
+SQL> ALTER TABLE genre
+  2  ADD FOREIGN KEY (mTitle) REFERENCES movie (movieTitle)
+  3  Deferrable initially deferred;
+
+Table altered.
+
+SQL> --
+SQL> ALTER TABLE person
+  2  ADD FOREIGN KEY (cName) REFERENCES production_company (companyName)
+  3  Deferrable initially deferred;
+
+Table altered.
+
+SQL> --
+SQL> ALTER TABLE works_on
+  2  ADD FOREIGN KEY (personName) REFERENCES person (personName)
+  3  ADD FOREIGN KEY (movieTitle) REFERENCES movie (movieTitle)
+  4  Deferrable initially deferred;
+
+Table altered.
+
+SQL> --
+SQL> ALTER TABLE distributes
+  2  ADD FOREIGN KEY (movieTitle) REFERENCES movie (movieTitle)
+  3  Deferrable initially deferred;
+
+Table altered.
+
+SQL> --
+SQL> --
+SQL> SET FEEDBACK OFF
+SQL> --
+SQL> -- --------------------------------------------------------------
+SQL> -- Populate the database
+SQL> -- --------------------------------------------------------------
+SQL> --
+SQL> alter session set NLS_DATE_FORMAT = 'MM/DD/YYYY';
+SQL> --
+SQL> -- movie inserts
+SQL> --
+SQL> INSERT INTO movie VALUES ('The Wizard of Oz', 'JR Agencies', '101',5 , 2);
+SQL> INSERT INTO movie VALUES ('Citizen Kane', '5-0 Management', '119', 4, 2);
+SQL> INSERT INTO movie VALUES ('The Third Man', '5-0 Management', '104', 5, 3);
+SQL> INSERT INTO movie VALUES ('MM : Fury Road', 'LA Management', '120', 5, 2);
+SQL> INSERT INTO movie VALUES ('All About Eve', 'PW Management', '138', 5, 3);
+SQL> INSERT INTO movie VALUES ('The Cabinet of Dr. Caligari', 'Blues Bros Management', '52',4, 4);
+SQL> INSERT INTO movie VALUES ('Inside Out', 'JR Agencies', '94',3, 5);
+SQL> INSERT INTO movie VALUES ('The Godfather', 'JR Agencies', '175',3, 6);
+SQL> INSERT INTO movie VALUES ('Metropolis', 'EL Management', '115', 4, 3);
+SQL> INSERT INTO movie VALUES ('Get Out', 'PW Management', '104', 3, 4);
+SQL> INSERT INTO movie VALUES ('Modern Times', 'PW Management', '87', 5, 7);
+SQL> INSERT INTO movie VALUES ('E.T. The Extra-Terrestrial', 'Blues Bros Management','114', 3, 4);
+SQL> INSERT INTO movie VALUES ('Singin in the Rain', 'PW Management', '102',4, 3);
+SQL> INSERT INTO movie VALUES ('It Happened One Night', 'PW Management', '105',3, 5);
+SQL> INSERT INTO movie VALUES ('Casablanca', 'Blues Bros Management', '102',4, 4);
+SQL> INSERT INTO movie VALUES ('Animal House', '5-0 Management', '109',5, 4);
+SQL> INSERT INTO movie VALUES ('Pineapple Express', 'HI GH Agencies','117',5, 4);
+SQL> INSERT INTO movie VALUES ('Drillbit Taylor', 'LA Management','102',5, 5);
+SQL> --
+SQL> -- person inserts
+SQL> --
+SQL> INSERT INTO person VALUES('Will Smith','PW Management','10/15/2016','09/25/1968','m');
+SQL> INSERT INTO person VALUES('John Smith','PW Management','3/22/2014','02/12/1965','m');
+SQL> INSERT INTO person VALUES('Jason Momoa','JR Agencies','1/19/2012','08/01/1979','m');
+SQL> INSERT INTO person VALUES('Emma Watson','PW Management','07/05/2009','04/15/1990','f');
+SQL> INSERT INTO person VALUES('Abby Hall','JR Agencies','02/24/2013','06/14/1987','f');
+SQL> INSERT INTO person VALUES('Seth Rogen','HI GH Agencies','09/27/2015','04/15/1982','m');
+SQL> INSERT INTO person VALUES('James Franco','HI GH Agencies','04/20/2006','04/19/1978','m');
+SQL> INSERT INTO person VALUES('Emily Jones','EL Management','09/04/2016','08/01/1977','f');
+SQL> INSERT INTO person VALUES('George Mann','EL Management','05/15/2012','12/02/1978','m');
+SQL> INSERT INTO person VALUES('John Belushi','Blues Bros Management','05/15/1978','01/24/1949','m');
+SQL> INSERT INTO person VALUES('Kevin Bacon','5-0 Management','05/15/2012','12/02/1978','m');
+SQL> INSERT INTO person VALUES('Casey Boersma','LA Management','01/01/2008','01/13/1995','m');
+SQL> INSERT INTO person VALUES('Dylan Boersma','LA Management','05/15/2008','01/13/1995','m');
+SQL> --
+SQL> -- production company inserts
+SQL> --
+SQL> INSERT INTO production_company VALUES('PW Management',1923);
+SQL> INSERT INTO production_company VALUES('JR Agencies',1928);
+SQL> INSERT INTO production_company VALUES('HI GH Agencies',1997);
+SQL> INSERT INTO production_company VALUES('EL Management',1935);
+SQL> INSERT INTO production_company VALUES('Blues Bros Management',1912);
+SQL> INSERT INTO production_company VALUES('5-0 Management',1986);
+SQL> INSERT INTO production_company VALUES('LA Management',1912);
+SQL> --
+SQL> -- distributor inserts
+SQL> --
+SQL> INSERT INTO distributor VALUES('Warner Bros. Pictures','10/09/95','Kevin Tsujihara','Jesse L. Lasky');
+SQL> INSERT INTO distributor VALUES('RKO Radio Pictures','01/24/89', 'DEFUNCT', 'Joseph P. Kennedy Sr.');
+SQL> INSERT INTO distributor VALUES('Rialto Pictures','03/12/93','Bruce Goldstein', 'Bruce Goldstein');
+SQL> INSERT INTO distributor VALUES('20th Century Fox','07/05/82', 'Stacey Snider', 'William Fox');
+SQL> INSERT INTO distributor VALUES('Paramount Pictures','10/09/95','Jim Gianopulos', 'Jesse L. Lasky');
+SQL> INSERT INTO distributor VALUES('Disney/Pixar','12/17/77', 'Robert A. Iger', 'Walt Disney');
+SQL> INSERT INTO distributor VALUES('Universal Pictures','02/20/88', 'Ronald Meyer', 'Carl Laemmle');
+SQL> INSERT INTO distributor VALUES('United Artists','08/24/86', 'Mark Burnette', 'Charlie Chaplain');
+SQL> INSERT INTO distributor VALUES('MGM','10/09/95', 'Gary Barber', 'Jesse L. Lasky');
+SQL> INSERT INTO distributor VALUES('Sony Pictures Home Entertainment','10/24/03', 'Man Jit Singh', 'Masaru Ibuka');
+SQL> --
+SQL> -- distributes inserts
+SQL> --
+SQL> INSERT INTO distributes VALUES('Warner Bros. Pictures','The Wizard of Oz','10/24/03','dvd','United States');
+SQL> INSERT INTO distributes VALUES('RKO Radio Pictures','Citizen Kane','10/20/04','dvd','United Kingdom');
+SQL> INSERT INTO distributes VALUES('Rialto Pictures','The Third Man','07/18/2000','dvd','United States');
+SQL> INSERT INTO distributes VALUES('20th Century Fox','MM : Fury Road','08/27/06','vcr','Denmark');
+SQL> INSERT INTO distributes VALUES('Paramount Pictures','All About Eve','04/12/02','vcr','United States');
+SQL> INSERT INTO distributes VALUES('Disney/Pixar','The Cabinet of Dr. Caligari','10/20/99','dvd','Iraq');
+SQL> INSERT INTO distributes VALUES('Universal Pictures','Inside Out','02/24/05','vcr','United States');
+SQL> INSERT INTO distributes VALUES('Universal Pictures','The Godfather','07/28/78','vcr','Djibouti');
+SQL> INSERT INTO distributes VALUES('Sony Pictures Home Entertainment','Pineapple Express','08/06/08','dvd','United States');
+SQL> INSERT INTO distributes VALUES('MGM','Drillbit Taylor','03/21/08','dvd','United States');
+SQL> --
+SQL> -- box office inserts
+SQL> --
+SQL> INSERT INTO box_office VALUES('The Wizard of Oz',4897362,1235986,156872,985634587);
+SQL> INSERT INTO box_office VALUES('Citizen Kane',1235986,1286475,968725,547862354);
+SQL> INSERT INTO box_office VALUES('The Third Man',84927489,17854963,123748,234658971);
+SQL> INSERT INTO box_office VALUES('MM : Fury Road',1726374,1235986,854721,127653892);
+SQL> INSERT INTO box_office VALUES('All About Eve',1236453,17854963,765843,234856975);
+SQL> INSERT INTO box_office VALUES('The Cabinet of Dr. Caligari',1829374,1596734,657921,542376854);
+SQL> INSERT INTO box_office VALUES('Inside Out',1726456,17854963,435678,954723612);
+SQL> INSERT INTO box_office VALUES('The Godfather',1829476,17854963,349685,124578965);
+SQL> INSERT INTO box_office VALUES('Metropolis',1728475,1235986,754865,325412578);
+SQL> INSERT INTO box_office VALUES('Get Out',1827465,17854963,346218,236521452);
+SQL> INSERT INTO box_office VALUES('Modern Times',1827475,1286475,546231,458756325);
+SQL> INSERT INTO box_office VALUES('E.T. The Extra-Terrestrial',1728472,17854963,742131,632541258);
+SQL> INSERT INTO box_office VALUES('Singin in the Rain',1827462,1235986,355684,147896321);
+SQL> INSERT INTO box_office VALUES('It Happened One Night',1829423,1596734,241322,258967413);
+SQL> INSERT INTO box_office VALUES('Casablanca',1829423,1286475,235687,563254100);
+SQL> INSERT INTO box_office VALUES('Animal House',3000000,1200341,479138,141600000);
+SQL> INSERT INTO box_office VALUES('Pineapple Express',27000000,14000000,23245025,87341380);
+SQL> INSERT INTO box_office VALUES('Drillbit Taylor',40000000,5555555,10309986,32853640);
+SQL> --
+SQL> -- works_on inserts
+SQL> --
+SQL> INSERT INTO works_on VALUES('Will Smith','Modern Times','actor');
+SQL> INSERT INTO works_on VALUES('John Smith','It Happened One Night','booking agent');
+SQL> INSERT INTO works_on VALUES('Jason Momoa','Inside Out','actor');
+SQL> INSERT INTO works_on VALUES('Emma Watson','It Happened One Night','actress');
+SQL> INSERT INTO works_on VALUES('Abby Hall','Inside Out','booking agent');
+SQL> INSERT INTO works_on VALUES('Seth Rogen','Pineapple Express','actor');
+SQL> INSERT INTO works_on VALUES('James Franco','Pineapple Express','actor');
+SQL> INSERT INTO works_on VALUES('Emily Jones','Metropolis','director');
+SQL> INSERT INTO works_on VALUES('George Mann','Metropolis','producer');
+SQL> INSERT INTO works_on VALUES('John Belushi','Casablanca','actor');
+SQL> INSERT INTO works_on VALUES('Kevin Bacon','The Third Man','actor');
+SQL> INSERT INTO works_on VALUES('Casey Boersma','Drillbit Taylor','actor');
+SQL> INSERT INTO works_on VALUES('Dylan Boersma','Drillbit Taylor','actor');
+SQL> --
+SQL> -- awards inserts
+SQL> --
+SQL> INSERT INTO awards VALUES ('The Wizard of Oz','Film of The Year');
+SQL> INSERT INTO awards VALUES ('Citizen Kane','Academy Award');
+SQL> INSERT INTO awards VALUES ('The Third Man','Film of The Year');
+SQL> INSERT INTO awards VALUES ('MM : Fury Road','Academy Award');
+SQL> INSERT INTO awards VALUES ('All About Eve','Academy Award');
+SQL> INSERT INTO awards VALUES ('The Cabinet of Dr. Caligari','Film of The Year');
+SQL> INSERT INTO awards VALUES ('Inside Out','Academy Award');
+SQL> INSERT INTO awards VALUES ('The Godfather','Film of The Year');
+SQL> INSERT INTO awards VALUES ('Metropolis','Academy Award');
+SQL> INSERT INTO awards VALUES ('Get Out','Film of The Year');
+SQL> INSERT INTO awards VALUES ('Modern Times','Academy Award');
+SQL> INSERT INTO awards VALUES ('E.T. The Extra-Terrestrial','Film of The Year');
+SQL> INSERT INTO awards VALUES ('Singin in the Rain','Academy Award');
+SQL> INSERT INTO awards VALUES ('It Happened One Night','Film of The Year');
+SQL> INSERT INTO awards VALUES ('Casablanca','Academy Award');
+SQL> --
+SQL> -- genre inserts
+SQL> --
+SQL> INSERT INTO genre VALUES ('The Wizard of Oz','fantasy');
+SQL> INSERT INTO genre VALUES ('Citizen Kane','action');
+SQL> INSERT INTO genre VALUES ('The Third Man','action');
+SQL> INSERT INTO genre VALUES ('MM : Fury Road','action');
+SQL> INSERT INTO genre VALUES ('All About Eve','romance');
+SQL> INSERT INTO genre VALUES ('The Cabinet of Dr. Caligari','thriller');
+SQL> INSERT INTO genre VALUES ('Inside Out','animation');
+SQL> INSERT INTO genre VALUES ('The Godfather','action');
+SQL> INSERT INTO genre VALUES ('Metropolis','suspense');
+SQL> INSERT INTO genre VALUES ('Get Out','horror');
+SQL> INSERT INTO genre VALUES ('Modern Times','suspense');
+SQL> INSERT INTO genre VALUES ('E.T. The Extra-Terrestrial','fantasy');
+SQL> INSERT INTO genre VALUES ('Singin in the Rain','romance');
+SQL> INSERT INTO genre VALUES ('It Happened One Night','romance');
+SQL> INSERT INTO genre VALUES ('Casablanca','romance');
+SQL> INSERT INTO genre VALUES ('Animal House','comedy');
+SQL> INSERT INTO genre VALUES ('Pineapple Express','comedy');
+SQL> INSERT INTO genre VALUES ('Drillbit Taylor','comedy');
+SQL> --
+SQL> --
+SQL> SET FEEDBACK ON
+SQL> --
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> --
+SQL> -- ------------------------------------------------------------------
+SQL> -- Displaying Tables
+SQL> -- ------------------------------------------------------------------
+SQL> --
+SQL> SELECT * FROM movie;
+
+MOVIETITLE                                                                      
+--------------------------------------------------                              
+CNAME                                                DURATION     RATING        
+-------------------------------------------------- ---------- ----------        
+  GCREVIEW                                                                      
+----------                                                                      
+The Wizard of Oz                                                                
+JR Agencies                                               101          5        
+         2                                                                      
+                                                                                
+Citizen Kane                                                                    
+5-0 Management                                            119          4        
+         2                                                                      
+
+MOVIETITLE                                                                      
+--------------------------------------------------                              
+CNAME                                                DURATION     RATING        
+-------------------------------------------------- ---------- ----------        
+  GCREVIEW                                                                      
+----------                                                                      
+                                                                                
+The Third Man                                                                   
+5-0 Management                                            104          5        
+         3                                                                      
+                                                                                
+MM : Fury Road                                                                  
+LA Management                                             120          5        
+
+MOVIETITLE                                                                      
+--------------------------------------------------                              
+CNAME                                                DURATION     RATING        
+-------------------------------------------------- ---------- ----------        
+  GCREVIEW                                                                      
+----------                                                                      
+         2                                                                      
+                                                                                
+All About Eve                                                                   
+PW Management                                             138          5        
+         3                                                                      
+                                                                                
+The Cabinet of Dr. Caligari                                                     
+
+MOVIETITLE                                                                      
+--------------------------------------------------                              
+CNAME                                                DURATION     RATING        
+-------------------------------------------------- ---------- ----------        
+  GCREVIEW                                                                      
+----------                                                                      
+Blues Bros Management                                      52          4        
+         4                                                                      
+                                                                                
+Inside Out                                                                      
+JR Agencies                                                94          3        
+         5                                                                      
+                                                                                
+
+MOVIETITLE                                                                      
+--------------------------------------------------                              
+CNAME                                                DURATION     RATING        
+-------------------------------------------------- ---------- ----------        
+  GCREVIEW                                                                      
+----------                                                                      
+The Godfather                                                                   
+JR Agencies                                               175          3        
+         6                                                                      
+                                                                                
+Metropolis                                                                      
+EL Management                                             115          4        
+         3                                                                      
+
+MOVIETITLE                                                                      
+--------------------------------------------------                              
+CNAME                                                DURATION     RATING        
+-------------------------------------------------- ---------- ----------        
+  GCREVIEW                                                                      
+----------                                                                      
+                                                                                
+Get Out                                                                         
+PW Management                                             104          3        
+         4                                                                      
+                                                                                
+Modern Times                                                                    
+PW Management                                              87          5        
+
+MOVIETITLE                                                                      
+--------------------------------------------------                              
+CNAME                                                DURATION     RATING        
+-------------------------------------------------- ---------- ----------        
+  GCREVIEW                                                                      
+----------                                                                      
+         7                                                                      
+                                                                                
+E.T. The Extra-Terrestrial                                                      
+Blues Bros Management                                     114          3        
+         4                                                                      
+                                                                                
+Singin in the Rain                                                              
+
+MOVIETITLE                                                                      
+--------------------------------------------------                              
+CNAME                                                DURATION     RATING        
+-------------------------------------------------- ---------- ----------        
+  GCREVIEW                                                                      
+----------                                                                      
+PW Management                                             102          4        
+         3                                                                      
+                                                                                
+It Happened One Night                                                           
+PW Management                                             105          3        
+         5                                                                      
+                                                                                
+
+MOVIETITLE                                                                      
+--------------------------------------------------                              
+CNAME                                                DURATION     RATING        
+-------------------------------------------------- ---------- ----------        
+  GCREVIEW                                                                      
+----------                                                                      
+Casablanca                                                                      
+Blues Bros Management                                     102          4        
+         4                                                                      
+                                                                                
+Animal House                                                                    
+5-0 Management                                            109          5        
+         4                                                                      
+
+MOVIETITLE                                                                      
+--------------------------------------------------                              
+CNAME                                                DURATION     RATING        
+-------------------------------------------------- ---------- ----------        
+  GCREVIEW                                                                      
+----------                                                                      
+                                                                                
+Pineapple Express                                                               
+HI GH Agencies                                            117          5        
+         4                                                                      
+                                                                                
+Drillbit Taylor                                                                 
+LA Management                                             102          5        
+
+MOVIETITLE                                                                      
+--------------------------------------------------                              
+CNAME                                                DURATION     RATING        
+-------------------------------------------------- ---------- ----------        
+  GCREVIEW                                                                      
+----------                                                                      
+         5                                                                      
+                                                                                
+
+18 rows selected.
+
+SQL> SELECT * FROM person;
+
+PERSONNAME                                                                      
+--------------------------------------------------                              
+CNAME                                              HDATE      DATEOFBIRT S      
+-------------------------------------------------- ---------- ---------- -      
+Will Smith                                                                      
+PW Management                                      10/15/2016 09/25/1968 m      
+                                                                                
+John Smith                                                                      
+PW Management                                      03/22/2014 02/12/1965 m      
+                                                                                
+Jason Momoa                                                                     
+JR Agencies                                        01/19/2012 08/01/1979 m      
+                                                                                
+
+PERSONNAME                                                                      
+--------------------------------------------------                              
+CNAME                                              HDATE      DATEOFBIRT S      
+-------------------------------------------------- ---------- ---------- -      
+Emma Watson                                                                     
+PW Management                                      07/05/2009 04/15/1990 f      
+                                                                                
+Abby Hall                                                                       
+JR Agencies                                        02/24/2013 06/14/1987 f      
+                                                                                
+Seth Rogen                                                                      
+HI GH Agencies                                     09/27/2015 04/15/1982 m      
+                                                                                
+
+PERSONNAME                                                                      
+--------------------------------------------------                              
+CNAME                                              HDATE      DATEOFBIRT S      
+-------------------------------------------------- ---------- ---------- -      
+James Franco                                                                    
+HI GH Agencies                                     04/20/2006 04/19/1978 m      
+                                                                                
+Emily Jones                                                                     
+EL Management                                      09/04/2016 08/01/1977 f      
+                                                                                
+George Mann                                                                     
+EL Management                                      05/15/2012 12/02/1978 m      
+                                                                                
+
+PERSONNAME                                                                      
+--------------------------------------------------                              
+CNAME                                              HDATE      DATEOFBIRT S      
+-------------------------------------------------- ---------- ---------- -      
+John Belushi                                                                    
+Blues Bros Management                              05/15/1978 01/24/1949 m      
+                                                                                
+Kevin Bacon                                                                     
+5-0 Management                                     05/15/2012 12/02/1978 m      
+                                                                                
+Casey Boersma                                                                   
+LA Management                                      01/01/2008 01/13/1995 m      
+                                                                                
+
+PERSONNAME                                                                      
+--------------------------------------------------                              
+CNAME                                              HDATE      DATEOFBIRT S      
+-------------------------------------------------- ---------- ---------- -      
+Dylan Boersma                                                                   
+LA Management                                      05/15/2008 01/13/1995 m      
+                                                                                
+
+13 rows selected.
+
+SQL> SELECT * FROM production_company;
+
+COMPANYNAME                                        YEARFOUNDED                  
+-------------------------------------------------- -----------                  
+PW Management                                             1923                  
+JR Agencies                                               1928                  
+HI GH Agencies                                            1997                  
+EL Management                                             1935                  
+Blues Bros Management                                     1912                  
+5-0 Management                                            1986                  
+LA Management                                             1912                  
+
+7 rows selected.
+
+SQL> SELECT * FROM distributor;
+
+DISTRIBUTORNAME                                    DATEOFFOUN                   
+-------------------------------------------------- ----------                   
+PRESIDENT                                                                       
+--------------------------------------------------                              
+FOUNDER                                                                         
+--------------------------------------------------                              
+Warner Bros. Pictures                              10/09/0095                   
+Kevin Tsujihara                                                                 
+Jesse L. Lasky                                                                  
+                                                                                
+RKO Radio Pictures                                 01/24/0089                   
+DEFUNCT                                                                         
+Joseph P. Kennedy Sr.                                                           
+
+DISTRIBUTORNAME                                    DATEOFFOUN                   
+-------------------------------------------------- ----------                   
+PRESIDENT                                                                       
+--------------------------------------------------                              
+FOUNDER                                                                         
+--------------------------------------------------                              
+                                                                                
+Rialto Pictures                                    03/12/0093                   
+Bruce Goldstein                                                                 
+Bruce Goldstein                                                                 
+                                                                                
+20th Century Fox                                   07/05/0082                   
+Stacey Snider                                                                   
+
+DISTRIBUTORNAME                                    DATEOFFOUN                   
+-------------------------------------------------- ----------                   
+PRESIDENT                                                                       
+--------------------------------------------------                              
+FOUNDER                                                                         
+--------------------------------------------------                              
+William Fox                                                                     
+                                                                                
+Paramount Pictures                                 10/09/0095                   
+Jim Gianopulos                                                                  
+Jesse L. Lasky                                                                  
+                                                                                
+Disney/Pixar                                       12/17/0077                   
+
+DISTRIBUTORNAME                                    DATEOFFOUN                   
+-------------------------------------------------- ----------                   
+PRESIDENT                                                                       
+--------------------------------------------------                              
+FOUNDER                                                                         
+--------------------------------------------------                              
+Robert A. Iger                                                                  
+Walt Disney                                                                     
+                                                                                
+Universal Pictures                                 02/20/0088                   
+Ronald Meyer                                                                    
+Carl Laemmle                                                                    
+                                                                                
+
+DISTRIBUTORNAME                                    DATEOFFOUN                   
+-------------------------------------------------- ----------                   
+PRESIDENT                                                                       
+--------------------------------------------------                              
+FOUNDER                                                                         
+--------------------------------------------------                              
+United Artists                                     08/24/0086                   
+Mark Burnette                                                                   
+Charlie Chaplain                                                                
+                                                                                
+MGM                                                10/09/0095                   
+Gary Barber                                                                     
+Jesse L. Lasky                                                                  
+
+DISTRIBUTORNAME                                    DATEOFFOUN                   
+-------------------------------------------------- ----------                   
+PRESIDENT                                                                       
+--------------------------------------------------                              
+FOUNDER                                                                         
+--------------------------------------------------                              
+                                                                                
+Sony Pictures Home Entertainment                   10/24/0003                   
+Man Jit Singh                                                                   
+Masaru Ibuka                                                                    
+                                                                                
+
+10 rows selected.
+
+SQL> SELECT * FROM box_office;
+
+MTITLE                                             COSTOFPRODUCTIO ADMISSIONS   
+-------------------------------------------------- --------------- ----------   
+OPENINGWEEKENDREVENUE GROSSPROFIT                                               
+--------------------- -----------                                               
+The Wizard of Oz                                   4897362            1235986   
+               156872   985634587                                               
+                                                                                
+Citizen Kane                                       1235986            1286475   
+               968725   547862354                                               
+                                                                                
+The Third Man                                      84927489          17854963   
+               123748   234658971                                               
+                                                                                
+
+MTITLE                                             COSTOFPRODUCTIO ADMISSIONS   
+-------------------------------------------------- --------------- ----------   
+OPENINGWEEKENDREVENUE GROSSPROFIT                                               
+--------------------- -----------                                               
+MM : Fury Road                                     1726374            1235986   
+               854721   127653892                                               
+                                                                                
+All About Eve                                      1236453           17854963   
+               765843   234856975                                               
+                                                                                
+The Cabinet of Dr. Caligari                        1829374            1596734   
+               657921   542376854                                               
+                                                                                
+
+MTITLE                                             COSTOFPRODUCTIO ADMISSIONS   
+-------------------------------------------------- --------------- ----------   
+OPENINGWEEKENDREVENUE GROSSPROFIT                                               
+--------------------- -----------                                               
+Inside Out                                         1726456           17854963   
+               435678   954723612                                               
+                                                                                
+The Godfather                                      1829476           17854963   
+               349685   124578965                                               
+                                                                                
+Metropolis                                         1728475            1235986   
+               754865   325412578                                               
+                                                                                
+
+MTITLE                                             COSTOFPRODUCTIO ADMISSIONS   
+-------------------------------------------------- --------------- ----------   
+OPENINGWEEKENDREVENUE GROSSPROFIT                                               
+--------------------- -----------                                               
+Get Out                                            1827465           17854963   
+               346218   236521452                                               
+                                                                                
+Modern Times                                       1827475            1286475   
+               546231   458756325                                               
+                                                                                
+E.T. The Extra-Terrestrial                         1728472           17854963   
+               742131   632541258                                               
+                                                                                
+
+MTITLE                                             COSTOFPRODUCTIO ADMISSIONS   
+-------------------------------------------------- --------------- ----------   
+OPENINGWEEKENDREVENUE GROSSPROFIT                                               
+--------------------- -----------                                               
+Singin in the Rain                                 1827462            1235986   
+               355684   147896321                                               
+                                                                                
+It Happened One Night                              1829423            1596734   
+               241322   258967413                                               
+                                                                                
+Casablanca                                         1829423            1286475   
+               235687   563254100                                               
+                                                                                
+
+MTITLE                                             COSTOFPRODUCTIO ADMISSIONS   
+-------------------------------------------------- --------------- ----------   
+OPENINGWEEKENDREVENUE GROSSPROFIT                                               
+--------------------- -----------                                               
+Animal House                                       3000000            1200341   
+               479138   141600000                                               
+                                                                                
+Pineapple Express                                  27000000          14000000   
+             23245025    87341380                                               
+                                                                                
+Drillbit Taylor                                    40000000           5555555   
+             10309986    32853640                                               
+                                                                                
+
+18 rows selected.
+
+SQL> SELECT * FROM awards;
+
+MTITLE                                                                          
+--------------------------------------------------                              
+MAWARD                                                                          
+--------------------------------------------------                              
+All About Eve                                                                   
+Academy Award                                                                   
+                                                                                
+Casablanca                                                                      
+Academy Award                                                                   
+                                                                                
+Citizen Kane                                                                    
+Academy Award                                                                   
+                                                                                
+
+MTITLE                                                                          
+--------------------------------------------------                              
+MAWARD                                                                          
+--------------------------------------------------                              
+E.T. The Extra-Terrestrial                                                      
+Film of The Year                                                                
+                                                                                
+Get Out                                                                         
+Film of The Year                                                                
+                                                                                
+Inside Out                                                                      
+Academy Award                                                                   
+                                                                                
+
+MTITLE                                                                          
+--------------------------------------------------                              
+MAWARD                                                                          
+--------------------------------------------------                              
+It Happened One Night                                                           
+Film of The Year                                                                
+                                                                                
+MM : Fury Road                                                                  
+Academy Award                                                                   
+                                                                                
+Metropolis                                                                      
+Academy Award                                                                   
+                                                                                
+
+MTITLE                                                                          
+--------------------------------------------------                              
+MAWARD                                                                          
+--------------------------------------------------                              
+Modern Times                                                                    
+Academy Award                                                                   
+                                                                                
+Singin in the Rain                                                              
+Academy Award                                                                   
+                                                                                
+The Cabinet of Dr. Caligari                                                     
+Film of The Year                                                                
+                                                                                
+
+MTITLE                                                                          
+--------------------------------------------------                              
+MAWARD                                                                          
+--------------------------------------------------                              
+The Godfather                                                                   
+Film of The Year                                                                
+                                                                                
+The Third Man                                                                   
+Film of The Year                                                                
+                                                                                
+The Wizard of Oz                                                                
+Film of The Year                                                                
+                                                                                
+
+15 rows selected.
+
+SQL> SELECT * FROM genre;
+
+MTITLE                                                                          
+--------------------------------------------------                              
+MGENRE                                                                          
+--------------------------------------------------                              
+All About Eve                                                                   
+romance                                                                         
+                                                                                
+Animal House                                                                    
+comedy                                                                          
+                                                                                
+Casablanca                                                                      
+romance                                                                         
+                                                                                
+
+MTITLE                                                                          
+--------------------------------------------------                              
+MGENRE                                                                          
+--------------------------------------------------                              
+Citizen Kane                                                                    
+action                                                                          
+                                                                                
+Drillbit Taylor                                                                 
+comedy                                                                          
+                                                                                
+E.T. The Extra-Terrestrial                                                      
+fantasy                                                                         
+                                                                                
+
+MTITLE                                                                          
+--------------------------------------------------                              
+MGENRE                                                                          
+--------------------------------------------------                              
+Get Out                                                                         
+horror                                                                          
+                                                                                
+Inside Out                                                                      
+animation                                                                       
+                                                                                
+It Happened One Night                                                           
+romance                                                                         
+                                                                                
+
+MTITLE                                                                          
+--------------------------------------------------                              
+MGENRE                                                                          
+--------------------------------------------------                              
+MM : Fury Road                                                                  
+action                                                                          
+                                                                                
+Metropolis                                                                      
+suspense                                                                        
+                                                                                
+Modern Times                                                                    
+suspense                                                                        
+                                                                                
+
+MTITLE                                                                          
+--------------------------------------------------                              
+MGENRE                                                                          
+--------------------------------------------------                              
+Pineapple Express                                                               
+comedy                                                                          
+                                                                                
+Singin in the Rain                                                              
+romance                                                                         
+                                                                                
+The Cabinet of Dr. Caligari                                                     
+thriller                                                                        
+                                                                                
+
+MTITLE                                                                          
+--------------------------------------------------                              
+MGENRE                                                                          
+--------------------------------------------------                              
+The Godfather                                                                   
+action                                                                          
+                                                                                
+The Third Man                                                                   
+action                                                                          
+                                                                                
+The Wizard of Oz                                                                
+fantasy                                                                         
+                                                                                
+
+18 rows selected.
+
+SQL> SELECT * FROM works_on;
+
+PERSONNAME                                                                      
+--------------------------------------------------                              
+MOVIETITLE                                         PRIMARYROLE                  
+-------------------------------------------------- -------------------------    
+Will Smith                                                                      
+Modern Times                                       actor                        
+                                                                                
+John Smith                                                                      
+It Happened One Night                              booking agent                
+                                                                                
+Jason Momoa                                                                     
+Inside Out                                         actor                        
+                                                                                
+
+PERSONNAME                                                                      
+--------------------------------------------------                              
+MOVIETITLE                                         PRIMARYROLE                  
+-------------------------------------------------- -------------------------    
+Emma Watson                                                                     
+It Happened One Night                              actress                      
+                                                                                
+Abby Hall                                                                       
+Inside Out                                         booking agent                
+                                                                                
+Seth Rogen                                                                      
+Pineapple Express                                  actor                        
+                                                                                
+
+PERSONNAME                                                                      
+--------------------------------------------------                              
+MOVIETITLE                                         PRIMARYROLE                  
+-------------------------------------------------- -------------------------    
+James Franco                                                                    
+Pineapple Express                                  actor                        
+                                                                                
+Emily Jones                                                                     
+Metropolis                                         director                     
+                                                                                
+George Mann                                                                     
+Metropolis                                         producer                     
+                                                                                
+
+PERSONNAME                                                                      
+--------------------------------------------------                              
+MOVIETITLE                                         PRIMARYROLE                  
+-------------------------------------------------- -------------------------    
+John Belushi                                                                    
+Casablanca                                         actor                        
+                                                                                
+Kevin Bacon                                                                     
+The Third Man                                      actor                        
+                                                                                
+Casey Boersma                                                                   
+Drillbit Taylor                                    actor                        
+                                                                                
+
+PERSONNAME                                                                      
+--------------------------------------------------                              
+MOVIETITLE                                         PRIMARYROLE                  
+-------------------------------------------------- -------------------------    
+Dylan Boersma                                                                   
+Drillbit Taylor                                    actor                        
+                                                                                
+
+13 rows selected.
+
+SQL> SELECT * FROM distributes;
+
+DISTRIBUTORNAME                                                                 
+--------------------------------------------------                              
+MOVIETITLE                                         DISTRIBUTI                   
+-------------------------------------------------- ----------                   
+DISTRIBUTIONMEDIUM   COUNTRY                                                    
+-------------------- --------------------                                       
+Warner Bros. Pictures                                                           
+The Wizard of Oz                                   10/24/0003                   
+dvd                  United States                                              
+                                                                                
+RKO Radio Pictures                                                              
+Citizen Kane                                       10/20/0004                   
+dvd                  United Kingdom                                             
+
+DISTRIBUTORNAME                                                                 
+--------------------------------------------------                              
+MOVIETITLE                                         DISTRIBUTI                   
+-------------------------------------------------- ----------                   
+DISTRIBUTIONMEDIUM   COUNTRY                                                    
+-------------------- --------------------                                       
+                                                                                
+Rialto Pictures                                                                 
+The Third Man                                      07/18/2000                   
+dvd                  United States                                              
+                                                                                
+20th Century Fox                                                                
+MM : Fury Road                                     08/27/0006                   
+
+DISTRIBUTORNAME                                                                 
+--------------------------------------------------                              
+MOVIETITLE                                         DISTRIBUTI                   
+-------------------------------------------------- ----------                   
+DISTRIBUTIONMEDIUM   COUNTRY                                                    
+-------------------- --------------------                                       
+vcr                  Denmark                                                    
+                                                                                
+Paramount Pictures                                                              
+All About Eve                                      04/12/0002                   
+vcr                  United States                                              
+                                                                                
+Disney/Pixar                                                                    
+
+DISTRIBUTORNAME                                                                 
+--------------------------------------------------                              
+MOVIETITLE                                         DISTRIBUTI                   
+-------------------------------------------------- ----------                   
+DISTRIBUTIONMEDIUM   COUNTRY                                                    
+-------------------- --------------------                                       
+The Cabinet of Dr. Caligari                        10/20/0099                   
+dvd                  Iraq                                                       
+                                                                                
+Universal Pictures                                                              
+Inside Out                                         02/24/0005                   
+vcr                  United States                                              
+                                                                                
+
+DISTRIBUTORNAME                                                                 
+--------------------------------------------------                              
+MOVIETITLE                                         DISTRIBUTI                   
+-------------------------------------------------- ----------                   
+DISTRIBUTIONMEDIUM   COUNTRY                                                    
+-------------------- --------------------                                       
+Universal Pictures                                                              
+The Godfather                                      07/28/0078                   
+vcr                  Djibouti                                                   
+                                                                                
+Sony Pictures Home Entertainment                                                
+Pineapple Express                                  08/06/0008                   
+dvd                  United States                                              
+
+DISTRIBUTORNAME                                                                 
+--------------------------------------------------                              
+MOVIETITLE                                         DISTRIBUTI                   
+-------------------------------------------------- ----------                   
+DISTRIBUTIONMEDIUM   COUNTRY                                                    
+-------------------- --------------------                                       
+                                                                                
+MGM                                                                             
+Drillbit Taylor                                    03/21/0008                   
+dvd                  United States                                              
+                                                                                
+
+10 rows selected.
+
+SQL> --
+SQL> -- ------------------------------------------------------------------
+SQL> -- Queries
+SQL> -- ------------------------------------------------------------------
+SQL> --
+SQL> -- 1: Joining 4
+SQL> -- Find the person's name/ company name, movie title and (movie's) gross profit for any actor
+SQL> -- that worked on a comedy film that grossed more than $50 mill
+SQL> --
+SQL> SELECT p.personName, m.movieTitle, b.grossProfit
+  2  FROM Person p, Movie m, box_office b, works_on w, genre g
+  3  WHERE p.personName = w.personName AND
+  4  	       m.movieTitle = w.movieTitle AND b.mTitle = m.movieTitle AND g.mTitle = m.movieTitle AND
+  5  	       b.grossProfit > 50000000 AND
+  6  	       w.primaryRole = 'actor' AND
+  7  	       g.Mgenre LIKE '%comedy%';
+
+PERSONNAME                                                                      
+--------------------------------------------------                              
+MOVIETITLE                                         GROSSPROFIT                  
+-------------------------------------------------- -----------                  
+James Franco                                                                    
+Pineapple Express                                     87341380                  
+                                                                                
+Seth Rogen                                                                      
+Pineapple Express                                     87341380                  
+                                                                                
+
+2 rows selected.
+
+SQL> --
+SQL> -- 2: Self Join
+SQL> -- Find names of distributors who were founded at the same time that also share the same founder.
+SQL> --
+SQL> SELECT DISTINCT d1.distributorName
+  2  	FROM distributor d1, distributor d2
+  3  	WHERE d1.distributorName <> d2.distributorName AND
+  4  	      d1.founder = d2.founder AND
+  5  	      d1.dateOfFounding = d2.dateOfFounding;
+
+DISTRIBUTORNAME                                                                 
+--------------------------------------------------                              
+Paramount Pictures                                                              
+Warner Bros. Pictures                                                           
+MGM                                                                             
+
+3 rows selected.
+
+SQL> --
+SQL> -- 3: Union/Intersection/Minus
+SQL> -- < Select all of the action movies with a rating greater than 3 >
+SQL> --
+SQL> SELECT m.movieTitle, g.mGenre, m.rating
+  2  FROM movie m, genre g
+  3  WHERE m.rating > 3
+  4  INTERSECT
+  5  SELECT g.mTitle, g.mGenre, m.rating
+  6  FROM genre g, movie m
+  7  WHERE g.mGenre LIKE '%action%';
+
+MOVIETITLE                                                                      
+--------------------------------------------------                              
+MGENRE                                                 RATING                   
+-------------------------------------------------- ----------                   
+Citizen Kane                                                                    
+action                                                      4                   
+                                                                                
+MM : Fury Road                                                                  
+action                                                      5                   
+                                                                                
+The Third Man                                                                   
+action                                                      5                   
+                                                                                
+
+3 rows selected.
+
+SQL> --
+SQL> -- 4: SUM/AVG/MAX/MIN
+SQL> -- < Select the movie title, cost of production and gross profit, and
+SQL> --   awards for all movies that have earned awards, with ratings greater than 3,
+SQL> --   and whose gross profit is greater than the average gross profit >
+SQL> --
+SQL> SELECT distinct b.mTitle, b.costOfProduction, b.grossProfit, a.mAward
+  2  FROM   box_office b, awards a
+  3  WHERE  b.mTitle = a.mTitle AND
+  4  	    b.grossProfit >
+  5  	     (SELECT AVG (b.grossProfit)
+  6  	      FROM box_office b, awards a, movie m
+  7  	      WHERE a.mAward IS NOT NULL AND
+  8  	      m.rating > 3)
+  9  ORDER BY b.mTitle;
+
+MTITLE                                             COSTOFPRODUCTIO GROSSPROFIT  
+-------------------------------------------------- --------------- -----------  
+MAWARD                                                                          
+--------------------------------------------------                              
+Casablanca                                         1829423           563254100  
+Academy Award                                                                   
+                                                                                
+Citizen Kane                                       1235986           547862354  
+Academy Award                                                                   
+                                                                                
+E.T. The Extra-Terrestrial                         1728472           632541258  
+Film of The Year                                                                
+                                                                                
+
+MTITLE                                             COSTOFPRODUCTIO GROSSPROFIT  
+-------------------------------------------------- --------------- -----------  
+MAWARD                                                                          
+--------------------------------------------------                              
+Inside Out                                         1726456           954723612  
+Academy Award                                                                   
+                                                                                
+Modern Times                                       1827475           458756325  
+Academy Award                                                                   
+                                                                                
+The Cabinet of Dr. Caligari                        1829374           542376854  
+Film of The Year                                                                
+                                                                                
+
+MTITLE                                             COSTOFPRODUCTIO GROSSPROFIT  
+-------------------------------------------------- --------------- -----------  
+MAWARD                                                                          
+--------------------------------------------------                              
+The Wizard of Oz                                   4897362           985634587  
+Film of The Year                                                                
+                                                                                
+
+7 rows selected.
+
+SQL> --
+SQL> -- 5: GROUP BY, HAVING, ORDER BY
+SQL> -- < Find the average duration of movies with a rating of 3, 4, and 5 >
+SQL> SELECT rating, AVG (duration)
+  2  	FROM movie
+  3  	GROUP BY rating
+  4  	HAVING COUNT (rating) > 2
+  5  	ORDER BY AVG (rating);
+
+    RATING AVG(DURATION)                                                        
+---------- -------------                                                        
+         3         118.4                                                        
+         4            98                                                        
+         5        109.75                                                        
+
+3 rows selected.
+
+SQL> --
+SQL> --
+SQL> -- 6: Correlated Subquery
+SQL> -- Find the title, gross profit, and genre of the highest grossing films of each genre.
+SQL> --
+SQL> SELECT b1.mTitle, b1.grossProfit, g1.mGenre
+  2  FROM   box_office b1, genre g1
+  3  WHERE g1.mTitle = b1.mTitle AND
+  4  	       b1.grossProfit =
+  5  	   (SELECT MAX(b2.grossProfit)
+  6  	    FROM box_office b2, genre g2
+  7  	    WHERE g1.mGenre LIKE g2.mGenre AND
+  8  		  b2.mTitle = g2.mTitle)
+  9  ORDER BY b1.mTitle;
+
+MTITLE                                             GROSSPROFIT                  
+-------------------------------------------------- -----------                  
+MGENRE                                                                          
+--------------------------------------------------                              
+Animal House                                         141600000                  
+comedy                                                                          
+                                                                                
+Casablanca                                           563254100                  
+romance                                                                         
+                                                                                
+Citizen Kane                                         547862354                  
+action                                                                          
+                                                                                
+
+MTITLE                                             GROSSPROFIT                  
+-------------------------------------------------- -----------                  
+MGENRE                                                                          
+--------------------------------------------------                              
+Get Out                                              236521452                  
+horror                                                                          
+                                                                                
+Inside Out                                           954723612                  
+animation                                                                       
+                                                                                
+Modern Times                                         458756325                  
+suspense                                                                        
+                                                                                
+
+MTITLE                                             GROSSPROFIT                  
+-------------------------------------------------- -----------                  
+MGENRE                                                                          
+--------------------------------------------------                              
+The Cabinet of Dr. Caligari                          542376854                  
+thriller                                                                        
+                                                                                
+The Wizard of Oz                                     985634587                  
+fantasy                                                                         
+                                                                                
+
+8 rows selected.
+
+SQL> --
+SQL> -- 7: Non-correlated Subquery
+SQL> -- < Finds every movie that wasn't distributed in the United States >
+SQL> --
+SQL> SELECT M.movieTitle
+  2  	FROM distributes M
+  3  	WHERE M.country NOT IN (SELECT N.country
+  4  				   FROM distributes N
+  5  				   WHERE N.country = 'United States');
+
+MOVIETITLE                                                                      
+--------------------------------------------------                              
+Citizen Kane                                                                    
+The Cabinet of Dr. Caligari                                                     
+The Godfather                                                                   
+MM : Fury Road                                                                  
+
+4 rows selected.
+
+SQL> --
+SQL> -- 8: A Relational DIVISION query
+SQL> -- < Finds the title of every movie that has a rating of 5 and
+SQL> --   was not produced by Warner Bros. Pictures >
+SQL> --
+SQL> SELECT M.movieTitle
+  2  	FROM movie M
+  3  	WHERE M.movieTitle = ((SELECT N.movieTitle
+  4  			 FROM movie N
+  5  			 WHERE N.rating = 5 AND
+  6  			       N.movieTitle = M.movieTitle)
+  7  			MINUS
+  8  			(SELECT N.movieTitle
+  9  			 FROM movie N
+ 10  			 WHERE N.cName = 'Warner Bros. Pictures'));
+
+MOVIETITLE                                                                      
+--------------------------------------------------                              
+All About Eve                                                                   
+Animal House                                                                    
+Drillbit Taylor                                                                 
+MM : Fury Road                                                                  
+Modern Times                                                                    
+Pineapple Express                                                               
+The Third Man                                                                   
+The Wizard of Oz                                                                
+
+8 rows selected.
+
+SQL> --
+SQL> -- 9: Outer Join
+SQL> -- < Finds the title, rating, and gross profit of every movie >
+SQL> --
+SQL> SELECT M.movieTitle, M.rating, B.grossProfit
+  2  	FROM movie M LEFT OUTER JOIN box_office B ON M.movieTitle = B.mTitle;
+
+MOVIETITLE                                             RATING GROSSPROFIT       
+-------------------------------------------------- ---------- -----------       
+The Wizard of Oz                                            5   985634587       
+Citizen Kane                                                4   547862354       
+The Third Man                                               5   234658971       
+MM : Fury Road                                              5   127653892       
+All About Eve                                               5   234856975       
+The Cabinet of Dr. Caligari                                 4   542376854       
+Inside Out                                                  3   954723612       
+The Godfather                                               3   124578965       
+Metropolis                                                  4   325412578       
+Get Out                                                     3   236521452       
+Modern Times                                                5   458756325       
+
+MOVIETITLE                                             RATING GROSSPROFIT       
+-------------------------------------------------- ---------- -----------       
+E.T. The Extra-Terrestrial                                  3   632541258       
+Singin in the Rain                                          4   147896321       
+It Happened One Night                                       3   258967413       
+Casablanca                                                  4   563254100       
+Animal House                                                5   141600000       
+Pineapple Express                                           5    87341380       
+Drillbit Taylor                                             5    32853640       
+
+18 rows selected.
+
+SQL> --
+SQL> -- 10: RANK
+SQL> -- Returns the titles and ranks the gross profits of the movies in the 'action' genre,
+SQL> -- ordered by highest grossing to lowest, and (rank)1 = highest grossing.
+SQL> --
+SQL> SELECT b.mTitle, b.grossProfit,
+  2  RANK() OVER (PARTITION BY g.mgenre ORDER BY b.grossProfit DESC)
+  3  FROM box_office b, genre g
+  4  WHERE b.mtitle = g.mtitle AND
+  5  	   g.mgenre LIKE '%action%';
+
+MTITLE                                             GROSSPROFIT                  
+-------------------------------------------------- -----------                  
+RANK()OVER(PARTITIONBYG.MGENREORDERBYB.GROSSPROFITDESC)                         
+-------------------------------------------------------                         
+Citizen Kane                                         547862354                  
+                                                      1                         
+                                                                                
+The Third Man                                        234658971                  
+                                                      2                         
+                                                                                
+MM : Fury Road                                       127653892                  
+                                                      3                         
+                                                                                
+
+MTITLE                                             GROSSPROFIT                  
+-------------------------------------------------- -----------                  
+RANK()OVER(PARTITIONBYG.MGENREORDERBYB.GROSSPROFITDESC)                         
+-------------------------------------------------------                         
+The Godfather                                        124578965                  
+                                                      4                         
+                                                                                
+
+4 rows selected.
+
+SQL> --
+SQL> -- 11: Top-N
+SQL> -- Finds the title, cost of production, and gross profit of the 5 highest grossing movies.
+SQL> --
+SQL> SELECT  mtitle, costOfProduction, grossProfit
+  2  FROM   (SELECT * FROM box_office ORDER BY grossProfit DESC)
+  3  WHERE   ROWNUM < 6;
+
+MTITLE                                             COSTOFPRODUCTIO GROSSPROFIT  
+-------------------------------------------------- --------------- -----------  
+The Wizard of Oz                                   4897362           985634587  
+Inside Out                                         1726456           954723612  
+E.T. The Extra-Terrestrial                         1728472           632541258  
+Casablanca                                         1829423           563254100  
+Citizen Kane                                       1235986           547862354  
+
+5 rows selected.
+
+SQL> --
+SQL> --
+SQL> --Test constraint di1 (On delete cascade in the distributes table)
+SQL> SELECT  d.distributorName
+  2  FROM distributes d;
+
+DISTRIBUTORNAME                                                                 
+--------------------------------------------------                              
+20th Century Fox                                                                
+Disney/Pixar                                                                    
+MGM                                                                             
+Paramount Pictures                                                              
+RKO Radio Pictures                                                              
+Rialto Pictures                                                                 
+Sony Pictures Home Entertainment                                                
+Universal Pictures                                                              
+Universal Pictures                                                              
+Warner Bros. Pictures                                                           
+
+10 rows selected.
+
+SQL> 
+SQL> DELETE
+  2  FROM distributor
+  3  WHERE distributorName = 'Warner Bros. Pictures';
+
+1 row deleted.
+
+SQL> 
+SQL> SELECT d.distributorName
+  2  FROM distributes d;
+
+DISTRIBUTORNAME                                                                 
+--------------------------------------------------                              
+20th Century Fox                                                                
+Disney/Pixar                                                                    
+MGM                                                                             
+Paramount Pictures                                                              
+RKO Radio Pictures                                                              
+Rialto Pictures                                                                 
+Sony Pictures Home Entertainment                                                
+Universal Pictures                                                              
+Universal Pictures                                                              
+
+9 rows selected.
+
+SQL> --
+SQL> -- ---------------------------------------------------------------------------------------------
+SQL> -- Integrity Constraint Checks
+SQL> -- ---------------------------------------------------------------------------------------------
+SQL> --
+SQL> -- testing (mICKEY)
+SQL> INSERT INTO movie VALUES ('The Wizard of Oz', '5-0 Management', '101',5 , 2);
+INSERT INTO movie VALUES ('The Wizard of Oz', '5-0 Management', '101',5 , 2)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (LINDENBN.SYS_C00376894) violated 
+
+
+SQL> --
+SQL> -- testing (dil)
+SQL> DELETE FROM distributor WHERE distributorName = '20th Century Fox';
+
+1 row deleted.
+
+SQL> SELECT distributorName FROM distributes;
+
+DISTRIBUTORNAME                                                                 
+--------------------------------------------------                              
+Disney/Pixar                                                                    
+MGM                                                                             
+Paramount Pictures                                                              
+RKO Radio Pictures                                                              
+Rialto Pictures                                                                 
+Sony Pictures Home Entertainment                                                
+Universal Pictures                                                              
+Universal Pictures                                                              
+
+8 rows selected.
+
+SQL> SELECT distributorName FROM distributor;
+
+DISTRIBUTORNAME                                                                 
+--------------------------------------------------                              
+Disney/Pixar                                                                    
+MGM                                                                             
+Paramount Pictures                                                              
+RKO Radio Pictures                                                              
+Rialto Pictures                                                                 
+Sony Pictures Home Entertainment                                                
+United Artists                                                                  
+Universal Pictures                                                              
+
+8 rows selected.
+
+SQL> --
+SQL> -- testing (mIC2)
+SQL> INSERT INTO movie VALUES ('Into The Wild', 'JR Agencies', '103', 7, 3);
+INSERT INTO movie VALUES ('Into The Wild', 'JR Agencies', '103', 7, 3)
+*
+ERROR at line 1:
+ORA-02290: check constraint (LINDENBN.MIC2) violated 
+
+
+SQL> --
+SQL> -- testing (mIC3)
+SQL> INSERT INTO movie VALUES ('Into The Wild', 'JR Agencies', '103', 5, 0);
+INSERT INTO movie VALUES ('Into The Wild', 'JR Agencies', '103', 5, 0)
+*
+ERROR at line 1:
+ORA-02290: check constraint (LINDENBN.MIC3) violated 
+
+
+SQL> --
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> --
+SQL> SPOOL OFF
