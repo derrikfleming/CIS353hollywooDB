@@ -210,13 +210,13 @@ INSERT INTO distributor VALUES('Sony Pictures Home Entertainment','10/24/03', 'M
 -- testing (IC name)
 -- distributes inserts
 INSERT INTO distributes VALUES('Warner Bros. Pictures','The Wizard of Oz','10/24/03','dvd','United States');
-INSERT INTO distributes VALUES('RKO Radio Pictures','Citizen Kane','10/20/04','dvd','United States');
+INSERT INTO distributes VALUES('RKO Radio Pictures','Citizen Kane','10/20/04','dvd','United Kingdom');
 INSERT INTO distributes VALUES('Rialto Pictures','The Third Man','07/18/2000','dvd','United States');
-INSERT INTO distributes VALUES('20th Century Fox','MM : Fury Road','08/27/06','vcr','United States');
+INSERT INTO distributes VALUES('20th Century Fox','MM : Fury Road','08/27/06','vcr','Denmark');
 INSERT INTO distributes VALUES('Paramount Pictures','All About Eve','04/12/02','vcr','United States');
-INSERT INTO distributes VALUES('Disney/Pixar','The Cabinet of Dr. Caligari','10/20/99','dvd','United States');
+INSERT INTO distributes VALUES('Disney/Pixar','The Cabinet of Dr. Caligari','10/20/99','dvd','Iraq');
 INSERT INTO distributes VALUES('Universal Pictures','Inside Out','02/24/05','vcr','United States');
-INSERT INTO distributes VALUES('Universal Pictures','The Godfather','07/28/78','vcr','United States');
+INSERT INTO distributes VALUES('Universal Pictures','The Godfather','07/28/78','vcr','Djibouti');
 INSERT INTO distributes VALUES('Sony Pictures Home Entertainment','Pineapple Express','08/06/08','dvd','United States');
 INSERT INTO distributes VALUES('MGM','Drillbit Taylor','03/21/08','dvd','United States');
 --testing (IC name)
