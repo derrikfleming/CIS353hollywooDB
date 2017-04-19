@@ -59,14 +59,13 @@ SELECT rating, AVG (duration)
 --
 --
 -- 6: Correlated Subquery
--- Find any movie that has a gross profit greater than the average gross profit of movies in
--- the same genre.
+-- Find the title, gross profit, and genre of the highest grossing films of each genre.
 --
 SELECT b1.mTitle, b1.grossProfit, g1.mGenre 
 FROM   box_office b1, genre g1
 WHERE g1.mTitle = b1.mTitle AND
-	  b1.grossProfit > 
-      (SELECT AVG(b2.grossProfit)
+	  b1.grossProfit = 
+      (SELECT MAX(b2.grossProfit)
        FROM box_office b2, genre g2
        WHERE g1.mGenre LIKE g2.mGenre AND
              b2.mTitle = g2.mTitle)
