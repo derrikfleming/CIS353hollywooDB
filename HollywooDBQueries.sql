@@ -117,6 +117,16 @@ FROM   (SELECT * FROM box_office ORDER BY grossProfit DESC)
 WHERE   ROWNUM < 6;
 --
 --
+--Test constraint di1 (On delete cascade in the distributes table) 
+SELECT  d.distributorName
+FROM distributes d;
+
+DELETE 
+FROM distributor
+WHERE distributorName = 'Warner Bros. Pictures';
+
+SELECT d.distributorName
+FROM distributes d;
 ---------------------------------------------------------------
 SET ECHO OFF
 SPOOL OFF
