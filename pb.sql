@@ -95,7 +95,8 @@ CREATE TABLE distributes (
   distributionDate      date,
   distributionMedium    varchar2(20),
   country               varchar2(20),
-  PRIMARY KEY (distributorName, movieTitle) 
+  PRIMARY KEY (distributorName, movieTitle),
+  CONSTRAINT di1 FOREIGN KEY (distributorName) REFERENCES distributor (distributorName) ON DELETE CASCADE
 --
 );
 --
@@ -126,7 +127,6 @@ ADD FOREIGN KEY (movieTitle) REFERENCES movie (movieTitle)
 Deferrable initially deferred;
 --
 ALTER TABLE distributes
-ADD FOREIGN KEY (distributorName) REFERENCES distributor (distributorName)
 ADD FOREIGN KEY (movieTitle) REFERENCES movie (movieTitle)
 Deferrable initially deferred;
 -- --------------------------------------------------------------
