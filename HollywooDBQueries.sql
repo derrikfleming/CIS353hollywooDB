@@ -96,11 +96,10 @@ SELECT M.movieTitle
                     WHERE N.cName = 'Warner Bros. Pictures'));
 -- 
 -- 9: Outer Join
--- < DESCRIPTION HERE >
+-- < Finds the title, rating, and gross profit of every movie >
 -- 
-SELECT
-FROM
-WHERE ;
+SELECT M.movieTitle, M.rating, B.grossProfit
+   FROM movie M LEFT OUTER JOIN box_office B ON M.movieTitle = B.mTitle;
 --
 -- 10: RANK
 -- Find the rank in duration of the movie The Godfather.
