@@ -102,11 +102,14 @@ SELECT M.movieTitle, M.rating, B.grossProfit
    FROM movie M LEFT OUTER JOIN box_office B ON M.movieTitle = B.mTitle;
 --
 -- 10: RANK
--- Find the rank in duration of the movie The Godfather.
+-- Returns the titles and ranks the gross profits of the movies in the 'action' genre, 
+-- ordered by highest grossing to lowest, and (rank)1 = highest grossing.
 --
-SELECT RANK (SELECT duration FROM Movies WHERE movieTitle = 'The Godfather') WITHIN GROUP
- (ORDER BY duration) "The rank (in duration) of the movie: The Godfather"
-FROM movie;
+SELECT b.mTitle, b.grossProfit,
+RANK() OVER (PARTITION BY g.mgenre ORDER BY b.grossProfit DESC)
+FROM box_office b, genre g
+WHERE b.mtitle = g.mtitle AND
+      g.mgenre LIKE '%action%';
 --
 -- 11: Top-N
 -- Finds the title, cost of production, and gross profit of the 5 highest grossing movies.
