@@ -1,8 +1,6 @@
-
 --TODO: Write a 1 row, 2 attribute Integrity Constraint, and a test for it.
 --      Add Values to works_on
 --
-
 SPOOL project.out
 SET ECHO ON
 --
@@ -30,10 +28,12 @@ CREATE TABLE movie (
   movieTitle	        varchar2(50) PRIMARY KEY,
   cName			          varchar2(50),
   duration    	      number(4) NOT NULL,
-  rating			        number(1),
+  rating			        number(1) NOT NULL,
+  gCreview				number(1) NOT NULL,
 --
 CONSTRAINT mIC1 UNIQUE (movieTitle, cName),
-CONSTRAINT mIC2 CHECK (rating IN ('1','2','3','4','5'))	
+CONSTRAINT mIC2 CHECK (rating IN ('1','2','3','4','5')),
+CONSTRAINT mIC3 CHECK (NOT (rating > '3' AND gCreview < '1'))	
 );
 --
 CREATE TABLE person (
@@ -137,29 +137,32 @@ alter session set NLS_DATE_FORMAT = 'MM/DD/YYYY';
 --
 --
 -- movie inserts
-INSERT INTO movie VALUES ('The Wizard of Oz', 'JR Agencies', '101',5);
-INSERT INTO movie VALUES ('Citizen Kane', '5-0 Management', '119', 4);
-INSERT INTO movie VALUES ('The Third Man', '5-0 Management', '104', 5);
-INSERT INTO movie VALUES ('MM : Fury Road', 'LA Management', '120', 5);
-INSERT INTO movie VALUES ('All About Eve', 'PW Management', '138', 5);
-INSERT INTO movie VALUES ('The Cabinet of Dr. Caligari', 'Blues Bros Management', '52',4);
-INSERT INTO movie VALUES ('Inside Out', 'JR Agencies', '94',3);
-INSERT INTO movie VALUES ('The Godfather', 'JR Agencies', '175',3);
-INSERT INTO movie VALUES ('Metropolis', 'EL Management', '115', 4);
-INSERT INTO movie VALUES ('Get Out', 'PW Management', '104', 3);
-INSERT INTO movie VALUES ('Modern Times', 'PW Management', '87', 5);
-INSERT INTO movie VALUES ('E.T. The Extra-Terrestrial', 'Blues Bros Management','114', 3);
-INSERT INTO movie VALUES ('Singin in the Rain', 'PW Management', '102',4);
-INSERT INTO movie VALUES ('It Happened One Night', 'PW Management', '105',3);
-INSERT INTO movie VALUES ('Casablanca', 'Blues Bros Management', '102',4);
-INSERT INTO movie VALUES ('Animal House', '5-0 Management', '109',5);
-INSERT INTO movie VALUES ('Pineapple Express', 'HI GH Agencies','117',5);
-INSERT INTO movie VALUES ('Drillbit Taylor', 'LA Management','102',5);
+INSERT INTO movie VALUES ('The Wizard of Oz', 'JR Agencies', '101',5 , 2);
+INSERT INTO movie VALUES ('Citizen Kane', '5-0 Management', '119', 4, 2);
+INSERT INTO movie VALUES ('The Third Man', '5-0 Management', '104', 5, 3);
+INSERT INTO movie VALUES ('MM : Fury Road', 'LA Management', '120', 5, 2);
+INSERT INTO movie VALUES ('All About Eve', 'PW Management', '138', 5, 3);
+INSERT INTO movie VALUES ('The Cabinet of Dr. Caligari', 'Blues Bros Management', '52',4, 4);
+INSERT INTO movie VALUES ('Inside Out', 'JR Agencies', '94',3, 5);
+INSERT INTO movie VALUES ('The Godfather', 'JR Agencies', '175',3, 6);
+INSERT INTO movie VALUES ('Metropolis', 'EL Management', '115', 4, 3);
+INSERT INTO movie VALUES ('Get Out', 'PW Management', '104', 3, 4);
+INSERT INTO movie VALUES ('Modern Times', 'PW Management', '87', 5, 7);
+INSERT INTO movie VALUES ('E.T. The Extra-Terrestrial', 'Blues Bros Management','114', 3, 4);
+INSERT INTO movie VALUES ('Singin in the Rain', 'PW Management', '102',4, 3);
+INSERT INTO movie VALUES ('It Happened One Night', 'PW Management', '105',3, 5);
+INSERT INTO movie VALUES ('Casablanca', 'Blues Bros Management', '102',4, 4);
+INSERT INTO movie VALUES ('Animal House', '5-0 Management', '109',5, 4);
+INSERT INTO movie VALUES ('Pineapple Express', 'HI GH Agencies','117',5, 4);
+INSERT INTO movie VALUES ('Drillbit Taylor', 'LA Management','102',5, 5);
 --
 -- testing (mIC1)
 
 -- testing (mIC2)
-INSERT INTO movie VALUES ('Life', 'Warner Bros. Pictures', '117',8);
+INSERT INTO movie VALUES ('Life', 'JR Agencies', '117',8, 5);
+--
+-- testing (MIC3)
+INSERT INTO movie VALUES ('XXX', 'JR Agencies', '117', 5, 0);
 --
 -- person inserts
 INSERT INTO person VALUES('Will Smith','PW Management','10/15/2016','09/25/1968','m');
