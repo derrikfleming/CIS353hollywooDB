@@ -50,7 +50,7 @@ WHERE  b.mTitle = a.mTitle AND
          FROM box_office b, awards a, movie m
          WHERE a.mAward IS NOT NULL AND
          m.rating > 3)
-ORDER BY b.mTitle
+ORDER BY b.mTitle;
 --
 -- 5: GROUP BY, HAVING, ORDER BY
 -- < Find the average duration of movies with a rating of 3, 4, and 5 >
