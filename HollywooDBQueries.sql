@@ -62,14 +62,15 @@ SELECT rating, AVG (duration)
 -- Find any movie that has a gross profit greater than the average gross profit of movies in
 -- the same genre.
 --
-SELECT DISTINCT m1.movieTitle, b1.grossProfit 
-FROM movie m1, box_office b1, genre g1
-WHERE m1.movieTitle = b1.mTitle AND
+SELECT b1.mTitle, b1.grossProfit, g1.mGenre 
+FROM   box_office b1, genre g1
+WHERE g1.mTitle = b1.mTitle AND
 	  b1.grossProfit > 
       (SELECT AVG(b2.grossProfit)
-       FROM movie m2, box_office b2, genre g2
-       WHERE g1.mGenre = g2.mGenre)
-ORDER BY m1.movieTitle;
+       FROM box_office b2, genre g2
+       WHERE g1.mGenre LIKE g2.mGenre AND
+             b2.mTitle = g2.mTitle)
+ORDER BY b1.mTitle;
 --
 -- 7: Non-correlated Subquery
 -- < Finds every movie that wasn't distributed in the United States >
