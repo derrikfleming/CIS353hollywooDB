@@ -38,16 +38,19 @@ FROM genre g, movie m
 WHERE g.mGenre LIKE '%action%';
 --
 -- 4: SUM/AVG/MAX/MIN
--- < Select the movie title, cost of production and gross profit for all movies that have earned awards, with ratings greater than 3,
+-- < Select the movie title, cost of production and gross profit, and  
+--   awards for all movies that have earned awards, with ratings greater than 3,
 --   and whose gross profit is greater than the average gross profit >
 --
-SELECT b.mTitle, b.costOfProduction, b.grossProfit
-FROM box_office b
-WHERE b.grossProfit > 
- (SELECT AVG (b.grossProfit)
- FROM box_office b, awards a, movie m
- WHERE a.mAward IS NOT NULL AND
-       m.rating > 3);
+SELECT distinct b.mTitle, b.costOfProduction, b.grossProfit, a.mAward
+FROM   box_office b, awards a
+WHERE  b.mTitle = a.mTitle AND
+       b.grossProfit > 
+        (SELECT AVG (b.grossProfit)
+         FROM box_office b, awards a, movie m
+         WHERE a.mAward IS NOT NULL AND
+         m.rating > 3)
+ORDER BY b.mTitle
 --
 -- 5: GROUP BY, HAVING, ORDER BY
 -- < Find the average duration of movies with a rating of 3, 4, and 5 >
