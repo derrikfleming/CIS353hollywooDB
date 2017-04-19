@@ -1,5 +1,6 @@
 SPOOL project.out
 SET ECHO ON
+SET WRAP OFF
 /*
 CIS353 - Movie Database Design Project
 Derrik Flemming
