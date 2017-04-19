@@ -29,12 +29,12 @@ SELECT DISTINCT d1.distributorName
 -- 3: Union/Intersection/Minus
 -- < Select all of the action movies with a rating greater than 3 >
 --
-SELECT m.movieTitle
-FROM movie m 
+SELECT m.movieTitle, g.mGenre, m.rating
+FROM movie m, genre g 
 WHERE m.rating > 3
 INTERSECT
-SELECT g.mTitle
-FROM genre g
+SELECT g.mTitle, g.mGenre, m.rating
+FROM genre g, movie m
 WHERE g.mGenre LIKE '%action%';
 --
 -- 4: SUM/AVG/MAX/MIN
